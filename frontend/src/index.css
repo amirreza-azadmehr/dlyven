@@ -1,0 +1,132 @@
+/* Fonts are bundled from npm (@fontsource) — no CDN, works offline and on restricted networks. */
+@import '@fontsource-variable/inter/index.css';
+@import '@fontsource-variable/vazirmatn/index.css';
+@import '@fontsource-variable/noto-sans-arabic/index.css';
+@import '@fontsource-variable/noto-naskh-arabic/index.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ───────────────────────── Design tokens ─────────────────────────
+   Colors are space-separated RGB so Tailwind can apply alpha: bg-surface/80.
+   Light theme on :root, dark theme on .dark. Accent per [data-accent]. */
+:root {
+  --bg: 246 247 250;
+  --surface: 255 255 255;
+  --elevated: 255 255 255;
+  --line: 15 18 25;
+  --fg: 15 18 25;
+  --muted: 75 83 99;
+  --subtle: 100 107 122;
+  --success: 4 120 87;
+  --warning: 180 83 9;
+  --danger: 200 30 30;
+  --shell-alpha: 1;
+  --dir: 1;
+  --font-latin: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-latin);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: 11 13 18;
+  --surface: 17 20 27;
+  --elevated: 24 28 37;
+  --line: 255 255 255;
+  --fg: 236 238 243;
+  --muted: 160 168 184;
+  --subtle: 128 136 154;
+  --success: 52 211 153;
+  --warning: 251 191 36;
+  --danger: 248 113 113;
+  color-scheme: dark;
+}
+
+/* Accents: fill (buttons/progress), gradient end, text-on-fill, text-on-background.
+   All fill/fg pairs meet WCAG AA (≥4.5:1); ink colors meet AA on both themes. */
+[data-accent='indigo'] { --accent: 79 70 229; --accent-2: 124 58 237; --accent-fg: 255 255 255; --accent-ink: 67 56 202; }
+[data-accent='violet'] { --accent: 124 58 237; --accent-2: 192 38 211; --accent-fg: 255 255 255; --accent-ink: 109 40 217; }
+[data-accent='blue']   { --accent: 37 99 235; --accent-2: 8 145 178; --accent-fg: 255 255 255; --accent-ink: 29 78 216; }
+[data-accent='teal']   { --accent: 15 118 110; --accent-2: 4 120 87; --accent-fg: 255 255 255; --accent-ink: 15 118 110; }
+[data-accent='rose']   { --accent: 225 29 72; --accent-2: 190 24 93; --accent-fg: 255 255 255; --accent-ink: 190 18 60; }
+[data-accent='amber']  { --accent: 245 158 11; --accent-2: 249 115 22; --accent-fg: 28 20 6; --accent-ink: 180 83 9; }
+.dark[data-accent='indigo'] { --accent-ink: 165 180 252; }
+.dark[data-accent='violet'] { --accent-ink: 196 181 253; }
+.dark[data-accent='blue']   { --accent-ink: 147 197 253; }
+.dark[data-accent='teal']   { --accent-ink: 94 234 212; }
+.dark[data-accent='rose']   { --accent-ink: 253 164 175; }
+.dark[data-accent='amber']  { --accent-ink: 252 211 77; }
+
+/* Per-script font stacks. Inter is listed first everywhere: its @font-face unicode-range
+   covers only Latin/Cyrillic/Greek, so Arabic-script text falls through to the next font
+   while English titles inside RTL UI keep the Latin face. */
+html[lang='fa'] { --font-sans: 'Inter Variable', 'Vazirmatn Variable', 'Noto Sans Arabic Variable', system-ui, sans-serif; }
+html[lang='ckb'] { --font-sans: 'Inter Variable', 'Noto Sans Arabic Variable', 'Noto Naskh Arabic Variable', 'Vazirmatn Variable', system-ui, sans-serif; }
+html[dir='rtl'] { --dir: -1; }
+
+/* Translucent window (Mica / vibrancy): the shell becomes partially transparent. */
+html.translucent { --shell-alpha: 0.72; }
+html.translucent body { background: transparent; }
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  /* Arabic-script text needs more line height for diacritics and descenders. */
+  html[dir='rtl'] body { line-height: 1.7; }
+  input, textarea, [data-selectable] { user-select: text; -webkit-user-select: text; }
+  ::selection { background: rgb(var(--accent) / 0.35); }
+
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid rgb(var(--accent-ink)); outline-offset: 2px; border-radius: 8px; }
+
+  * { scrollbar-width: thin; scrollbar-color: rgb(var(--line) / 0.18) transparent; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgb(var(--line) / 0.14); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-thumb:hover { background: rgb(var(--line) / 0.26); background-clip: content-box; border: 3px solid transparent; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  img { -webkit-user-drag: none; }
+}
+
+@layer components {
+  .glass {
+    background: rgb(var(--surface) / calc(0.72 * var(--shell-alpha) + 0.1));
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+  .card {
+    @apply rounded-2xl border bg-surface shadow-soft;
+  }
+  .hairline { border-color: rgb(var(--line) / 0.09); }
+  .drag { --wails-draggable: drag; }
+  .no-drag { --wails-draggable: no-drag; }
+  .bg-accent-gradient { background-image: linear-gradient(135deg, rgb(var(--accent)), rgb(var(--accent-2))); }
+  .text-accent-gradient {
+    background-image: linear-gradient(135deg, rgb(var(--accent-ink)), rgb(var(--accent-2)));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .ambient {
+    background:
+      radial-gradient(60rem 30rem at 50% -10%, rgb(var(--accent) / 0.16), transparent 60%),
+      radial-gradient(40rem 20rem at 100% 110%, rgb(var(--accent-2) / 0.08), transparent 60%);
+  }
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

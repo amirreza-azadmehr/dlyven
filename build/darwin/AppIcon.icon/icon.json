@@ -1,0 +1,46 @@
+{
+  "fill-specializations": [
+    {
+      "value": {
+        "linear-gradient": [
+          "extended-srgb:0.46667,0.37647,0.94902,1.00000",
+          "extended-srgb:0.57255,0.35294,0.96078,1.00000"
+        ]
+      }
+    },
+    {
+      "appearance": "dark",
+      "value": {
+        "linear-gradient": [
+          "extended-srgb:0.38000,0.29000,0.82000,1.00000",
+          "extended-srgb:0.45000,0.27000,0.86000,1.00000"
+        ]
+      }
+    }
+  ],
+  "groups": [
+    {
+      "name": "Arrow",
+      "blur-material": 0.4,
+      "layers": [
+        {
+          "name": "Glyph",
+          "image-name": "arrow.png",
+          "glass": true
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.28
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.12
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": ["macOS"]
+  }
+}

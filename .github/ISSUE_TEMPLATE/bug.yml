@@ -1,0 +1,47 @@
+name: Bug
+description: Something is broken or unexpected
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Only download content you own or have permission to download.
+        Do **not** attach cookies.txt, logs with cookies, or account passwords.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      placeholder: What did you expect, and what actually happened?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Dlyven version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: OS
+      options: [Windows 10/11, macOS, Linux]
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Site or URL pattern
+      description: Host only is enough (e.g. youtube.com). Do not paste private or login-gated URLs.
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs (redacted)
+      description: Settings → Advanced → Copy diagnostic info. Strip cookie paths and proxy passwords.

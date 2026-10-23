@@ -1,0 +1,561 @@
+{
+  "app": {
+    "tagline": "Paste a link. Pick a quality. Done.",
+    "legal": "Only grab stuff you own or have permission to download."
+  },
+  "creator": {
+    "by": "Creator: {{name}}",
+    "subtitle": "Author of Dlyven",
+    "links": {
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "telegram": "Telegram"
+    }
+  },
+  "nav": {
+    "label": "Main navigation",
+    "home": "Home",
+    "downloads": "Downloads",
+    "history": "History",
+    "settings": "Settings",
+    "activeBadge_one": "{{n}} active download",
+    "activeBadge_other": "{{n}} active downloads"
+  },
+  "titlebar": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "restore": "Restore",
+    "close": "Close"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "retry": "Try again",
+    "browse": "Browse…",
+    "change": "Change",
+    "copy": "Copy",
+    "copied": "Copied to clipboard",
+    "reset": "Reset",
+    "default": "Default",
+    "auto": "Automatic",
+    "none": "None",
+    "unknown": "Unknown",
+    "loading": "Loading…",
+    "back": "Back",
+    "clear": "Clear",
+    "selectAll": "Select all",
+    "selectNone": "Select none",
+    "open": "Open",
+    "restartRequired": "Takes effect after restarting the app.",
+    "unlimited": "Unlimited",
+    "seconds": "seconds"
+  },
+  "home": {
+    "title": "Download from any link.",
+    "subtitle": "Paste a link from YouTube, Instagram, TikTok, Spotify, X and over a thousand other sites.",
+    "inputLabel": "Link to analyze",
+    "placeholder": "Paste a link…",
+    "paste": "Paste",
+    "analyze": "Analyze",
+    "analyzing": "Analyzing…",
+    "cancelAnalyze": "Cancel analysis",
+    "clearInput": "Clear",
+    "newLink": "New link",
+    "invalidUrl": "That doesn't look like a link.",
+    "otherSite": "Other site",
+    "matchedSource": "Matched source",
+    "worksWith": "Works with",
+    "andMore": "and 1,000+ more",
+    "dropHint": "or drop a link or a .txt file with links",
+    "dropOverlay": "Drop to add",
+    "dropNoLinks": "No links found in what you dropped.",
+    "shortcutHint": "Press {{keys}} anywhere to paste and analyze",
+    "clipboardFound": "Link found in your clipboard",
+    "clipboardAnalyze": "Analyze it"
+  },
+  "batch": {
+    "title_one": "{{n}} link",
+    "title_other": "{{n}} links",
+    "subtitle": "Download them all at once with a preset, or analyze a single one first.",
+    "mode": "Download as",
+    "modeVideo": "Best video",
+    "mode1080": "Video, up to 1080p",
+    "modeMp3": "Audio (MP3)",
+    "modeM4a": "Audio (M4A)",
+    "start_one": "Download {{n}} link",
+    "start_other": "Download {{n}} links",
+    "analyzeFirst": "Analyze the first one",
+    "queued_one": "{{n}} download added to the queue",
+    "queued_other": "{{n}} downloads added to the queue"
+  },
+  "result": {
+    "by": "by {{name}}",
+    "views_one": "{{n}} view",
+    "views_other": "{{n}} views",
+    "duration": "Duration",
+    "uploaded": "Uploaded",
+    "openSource": "Open original page",
+    "playlist_one": "Playlist · {{n}} item",
+    "playlist_other": "Playlist · {{n}} items",
+    "tabs": {
+      "label": "Download type",
+      "video": "Video",
+      "audio": "Audio only",
+      "subtitles": "Subtitles",
+      "thumbnail": "Thumbnail"
+    },
+    "presets": {
+      "label": "Quick presets",
+      "best": "Best",
+      "2160": "4K",
+      "1080": "1080p",
+      "720": "720p",
+      "480": "480p",
+      "mp3": "Audio MP3",
+      "m4a": "Audio M4A",
+      "unavailable": "Not available for this item"
+    },
+    "badges": {
+      "best": "Best",
+      "recommended": "Recommended",
+      "smallest": "Smallest",
+      "hdr": "HDR",
+      "merged": "+ audio",
+      "mergedHint": "This stream has no sound. The best audio track will be merged in automatically.",
+      "approx": "Estimated size"
+    },
+    "columns": {
+      "quality": "Quality",
+      "fps": "FPS",
+      "codec": "Codec",
+      "container": "Format",
+      "bitrate": "Bitrate",
+      "size": "Size",
+      "audio": "Audio"
+    },
+    "video": {
+      "noFormats": "No video streams were found. Try the Audio tab.",
+      "groupStreams_one": "{{n}} stream",
+      "groupStreams_other": "{{n}} streams",
+      "unknownResolution": "Other",
+      "container": "Save as",
+      "containerHint": "MP4 plays everywhere. MKV keeps every codec and subtitle. WebM suits VP9/AV1 streams.",
+      "playlistHint": "Formats differ per item, so pick a quality cap — each item gets its best match up to that.",
+      "qualityCap": "Quality",
+      "embedSubsNote_one": "{{n}} subtitle track will be included.",
+      "embedSubsNote_other": "{{n}} subtitle tracks will be included."
+    },
+    "audio": {
+      "format": "Format",
+      "bitrate": "Bitrate",
+      "best": "Best available",
+      "lossless": "Lossless — bitrate doesn't apply",
+      "embedThumbnail": "Embed cover art",
+      "embedMetadata": "Write tags (title, artist, …)",
+      "source": "Source stream",
+      "sourceAuto": "Automatic (best)",
+      "formats": {
+        "mp3": "Plays on everything",
+        "m4a": "AAC — great quality per size",
+        "opus": "Most efficient, modern players",
+        "flac": "Lossless, large files",
+        "wav": "Uncompressed, for editing"
+      }
+    },
+    "subtitles": {
+      "none": "No subtitles are available for this item.",
+      "search": "Filter languages…",
+      "manual": "Subtitles",
+      "auto": "Auto-generated",
+      "autoBadge": "Auto",
+      "mode": "When downloading video",
+      "embed": "Embed in the video",
+      "file": "Save as separate files",
+      "format": "File format",
+      "selected_one": "{{n}} language selected",
+      "selected_other": "{{n}} languages selected",
+      "hintEmbed": "Selected subtitles are embedded when you download from the Video tab. Download from here to get only the subtitle files.",
+      "noMatch": "No language matches “{{q}}”."
+    },
+    "thumbnail": {
+      "size": "Size",
+      "format": "Save as",
+      "original": "Original",
+      "dimensions": "{{w}} × {{h}}"
+    },
+    "playlist": {
+      "items": "Items",
+      "selected": "{{n}} of {{total}} selected",
+      "untitled": "Untitled"
+    },
+    "spotify": {
+      "title": "Audio comes from a matched source",
+      "body": "Spotify audio is DRM-protected and is never downloaded from Spotify. Dlyven reads the track details, finds a matching publicly available recording (YouTube Music) and tags the file with Spotify's title, artist, album and cover. The audio version and quality may differ from Spotify."
+    },
+    "destination": {
+      "folder": "Save to",
+      "changeFolder": "Change folder",
+      "chooseFolderTitle": "Choose where to save downloads",
+      "filename": "File name",
+      "filenameMulti": "First file name",
+      "editTemplate": "Edit template in settings"
+    },
+    "download": "Download",
+    "downloadCount_one": "Download {{n}} item",
+    "downloadCount_other": "Download {{n}} items",
+    "nothingSelected": "Select at least one item.",
+    "noSubsSelected": "Select at least one subtitle language.",
+    "queued": "Added to downloads",
+    "queuedMany_one": "{{n}} item added to downloads",
+    "queuedMany_other": "{{n}} items added to downloads",
+    "viewDownloads": "View"
+  },
+  "downloads": {
+    "title": "Downloads",
+    "subtitle": "Everything in progress and recently finished.",
+    "filters": {
+      "label": "Filter downloads",
+      "all": "All",
+      "active": "Active",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "clearFinished": "Clear finished",
+    "emptyTitle": "Nothing downloading yet",
+    "emptyBody": "Paste a link on the Home screen to get started.",
+    "emptyFilter": "No downloads match this filter.",
+    "goHome": "Paste a link",
+    "status": {
+      "queued": "Queued",
+      "downloading": "Downloading",
+      "merging": "Merging audio and video",
+      "converting": "Converting",
+      "paused": "Paused",
+      "retrying": "Retrying soon",
+      "done": "Completed",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    },
+    "actions": {
+      "pause": "Pause",
+      "resume": "Resume",
+      "cancel": "Cancel",
+      "retry": "Retry",
+      "remove": "Remove from list",
+      "openFile": "Open file",
+      "showInFolder": "Show in folder",
+      "copyLink": "Copy original link"
+    },
+    "part": "Stream {{part}} of {{parts}}",
+    "eta": "{{time}} left",
+    "perSecond": "{{speed}}/s",
+    "sizeOf": "{{done}} of {{total}}",
+    "progressLabel": "Download progress for {{title}}",
+    "attempt": "Attempt {{n}}",
+    "doneToast": "Download complete",
+    "failedToast": "Download failed",
+    "matched": "Matched audio"
+  },
+  "history": {
+    "title": "History",
+    "subtitle": "Every finished download, searchable.",
+    "search": "Search by title, channel or link…",
+    "allPlatforms": "All platforms",
+    "allStatuses": "All results",
+    "statusDone": "Completed",
+    "statusFailed": "Failed",
+    "count_one": "{{n}} item",
+    "count_other": "{{n}} items",
+    "emptyTitle": "No history yet",
+    "emptyBody": "Finished downloads show up here so you can find them again.",
+    "noResults": "Nothing matches your search.",
+    "clear": "Clear history",
+    "clearTitle": "Clear the whole history?",
+    "clearBody": "This only removes the list. Downloaded files stay on your disk.",
+    "clearConfirm": "Clear history",
+    "redownload": "Analyze again",
+    "delete": "Remove from history",
+    "fileMissing": "File was moved or deleted",
+    "loadMore": "Show more"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Saved automatically.",
+    "sections": {
+      "appearance": "Appearance",
+      "downloads": "Downloads",
+      "network": "Network",
+      "cookies": "Login & cookies",
+      "engine": "Download engine",
+      "behavior": "Behavior",
+      "advanced": "Advanced"
+    },
+    "language": "Language",
+    "languageSystem": "Same as system",
+    "theme": "Theme",
+    "themes": {
+      "system": "System",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "accent": "Accent color",
+    "accents": {
+      "indigo": "Indigo",
+      "violet": "Violet",
+      "blue": "Blue",
+      "teal": "Teal",
+      "rose": "Rose",
+      "amber": "Amber"
+    },
+    "nativeDigits": "Native digits",
+    "nativeDigitsHint": "Show numbers as {{sample}} instead of 0123.",
+    "calendar": "Calendar",
+    "calendars": {
+      "gregorian": "Gregorian",
+      "jalali": "Solar Hijri (Jalali)"
+    },
+    "translucency": "Translucent window",
+    "translucencyHint": "Uses Mica on Windows 11 and vibrancy on macOS.",
+    "downloadFolder": "Download folder",
+    "rememberLastFolder": "Remember the last folder I used",
+    "platformFolders": "Per-platform folders",
+    "platformFoldersHint": "Send downloads from a specific site to its own folder.",
+    "addPlatformFolder": "Add a folder for…",
+    "removePlatformFolder": "Remove",
+    "filenameTemplate": "File name template",
+    "filenameTemplateHint": "Click a field to insert it. The extension is added automatically. Illegal characters are replaced and existing files are never overwritten.",
+    "preview": "Preview",
+    "fields": {
+      "title": "Title",
+      "uploader": "Channel",
+      "quality": "Quality",
+      "resolution": "Resolution",
+      "fps": "Frame rate",
+      "platform": "Platform",
+      "id": "ID",
+      "date": "Upload date",
+      "playlist": "Playlist",
+      "index": "Number in playlist",
+      "artist": "Artist",
+      "album": "Album",
+      "track": "Track number"
+    },
+    "maxConcurrent": "Simultaneous downloads",
+    "speedLimit": "Speed limit",
+    "speedLimitHint": "Per download, in KB/s. 0 means unlimited.",
+    "defaultContainer": "Default video format",
+    "defaultAudio": "Default audio format",
+    "defaultBitrate": "Default audio bitrate",
+    "embedThumbnail": "Embed thumbnails and cover art",
+    "embedMetadata": "Write metadata tags",
+    "embedChapters": "Embed chapters",
+    "proxy": "Use a proxy",
+    "proxyHint": "Routes analysis, downloads and engine updates through a proxy — useful on restricted networks.",
+    "proxyType": "Type",
+    "proxyHost": "Host",
+    "proxyHostPlaceholder": "127.0.0.1 or a full URL",
+    "proxyPort": "Port",
+    "proxyUser": "Username",
+    "proxyPass": "Password",
+    "optional": "Optional",
+    "userAgent": "Custom User-Agent",
+    "userAgentHint": "Leave empty to use the engine's default.",
+    "retries": "Retries",
+    "retriesHint": "Failed network requests and downloads are retried with increasing delays.",
+    "timeout": "Connection timeout",
+    "cookiesIntro": "Some content (private Instagram posts, age-restricted or members-only videos) needs you to be signed in. Dlyven can use the login from your browser — your password is never seen or stored.",
+    "cookiesMode": "Sign-in source",
+    "cookiesModes": {
+      "none": "Don't use cookies",
+      "browser": "Use cookies from my browser",
+      "file": "Use a cookies.txt file"
+    },
+    "cookiesBrowser": "Browser",
+    "cookiesBrowserHint": "Sign in to the site in that browser first. Chrome and Edge may need to be closed while Dlyven reads cookies.",
+    "cookiesFile": "cookies.txt file",
+    "cookiesFileHint": "Export it with a “cookies.txt” browser extension (Netscape format).",
+    "chooseCookies": "Choose cookies.txt",
+    "cookiesWarning": "Cookies give access to your accounts. Only use files you exported yourself, and keep them private.",
+    "engineIntro": "Dlyven uses yt-dlp to read links, ffmpeg to merge and convert, and Deno to unlock every YouTube format. They're installed and verified automatically.",
+    "component": {
+      "yt-dlp": "yt-dlp",
+      "ffmpeg": "ffmpeg",
+      "deno": "Deno (JavaScript runtime)"
+    },
+    "notInstalled": "Not installed",
+    "source": {
+      "managed": "Managed by Dlyven",
+      "system": "Found on this system",
+      "custom": "Custom path"
+    },
+    "updateAvailable": "Update available: {{version}}",
+    "upToDate": "Up to date",
+    "checkUpdates": "Check for updates",
+    "updateEngine": "Update engine",
+    "reinstall": "Reinstall",
+    "installEngine": "Install engine",
+    "autoUpdate": "Update yt-dlp automatically",
+    "autoUpdateHint": "Sites change often; keeping yt-dlp current avoids most errors.",
+    "customPaths": "Custom paths",
+    "ytDlpPath": "yt-dlp path",
+    "ffmpegPath": "ffmpeg path (file or folder)",
+    "pathAuto": "Automatic",
+    "chooseFile": "Choose file",
+    "chooseExecutableTitle": "Choose the executable",
+    "clipboardWatch": "Detect links in the clipboard",
+    "clipboardWatchHint": "When you switch back to Dlyven, offer to analyze a copied link.",
+    "afterDownload": "When a download finishes",
+    "openFolderOnDone": "Open the folder",
+    "notify": "Show a notification",
+    "playSound": "Play a sound",
+    "diagnostics": "Diagnostics",
+    "diagnosticsHint": "Copies versions, settings (passwords removed) and recent log lines to share in a bug report.",
+    "copyDiagnostics": "Copy diagnostic info",
+    "openLogs": "Open logs folder",
+    "dataFolder": "Data folder",
+    "resetAll": "Reset to defaults",
+    "resetTitle": "Reset all settings?",
+    "resetBody": "Your downloads and history are kept. Language stays the same.",
+    "resetDone": "Settings were reset",
+    "about": "{{name}} {{version}}",
+    "shortcuts": "Keyboard shortcuts",
+    "shortcutList": {
+      "paste": "Paste and analyze",
+      "download": "Start download",
+      "settings": "Open settings",
+      "cancel": "Cancel / go back"
+    }
+  },
+  "engine": {
+    "settingUp": "Setting up the download engine",
+    "settingUpBody": "One-time setup. Files are downloaded from their official sources and verified.",
+    "ready": "Engine is ready",
+    "updated": "Engine updated",
+    "upToDate": "Engine is up to date",
+    "failed": "Engine setup failed",
+    "stages": {
+      "checking": "Checking…",
+      "downloading": "Downloading",
+      "verifying": "Verifying checksum…",
+      "extracting": "Installing…",
+      "done": "Ready",
+      "error": "Failed"
+    }
+  },
+  "errors": {
+    "suggestion": "What you can do",
+    "details": "Technical details",
+    "actions": {
+      "openCookies": "Set up sign-in",
+      "openNetwork": "Network settings",
+      "installEngine": "Install engine",
+      "updateEngine": "Update engine",
+      "retry": "Try again"
+    },
+    "ERR_UNKNOWN": {
+      "title": "Something went wrong",
+      "hint": "Try again. If it keeps happening, update the engine or copy diagnostic info from Settings."
+    },
+    "ERR_INVALID_URL": {
+      "title": "That isn't a valid link",
+      "hint": "Copy the full address from your browser, starting with https://."
+    },
+    "ERR_UNSUPPORTED_URL": {
+      "title": "This site isn't supported",
+      "hint": "Try the direct link to the video or post page rather than a home or search page."
+    },
+    "ERR_LOGIN_REQUIRED": {
+      "title": "You need to be signed in",
+      "hint": "This content needs a login. Turn on “Use cookies from my browser” in Login & cookies settings."
+    },
+    "ERR_AGE_RESTRICTED": {
+      "title": "Age-restricted content",
+      "hint": "Sign in through your browser cookies with an account that can view it."
+    },
+    "ERR_PRIVATE": {
+      "title": "This content is private",
+      "hint": "Only accounts with access can view it. Use cookies from a browser where you're signed in with such an account."
+    },
+    "ERR_GEO_BLOCKED": {
+      "title": "Not available in your region",
+      "hint": "Try a proxy located in a region where this content is available."
+    },
+    "ERR_NOT_FOUND": {
+      "title": "Content not found",
+      "hint": "It may have been deleted or the link is incomplete."
+    },
+    "ERR_RATE_LIMITED": {
+      "title": "Too many requests",
+      "hint": "The site is limiting requests. Wait a few minutes, sign in with cookies, or use a proxy."
+    },
+    "ERR_DRM": {
+      "title": "This content is DRM-protected",
+      "hint": "Protected content can't be downloaded."
+    },
+    "ERR_NETWORK": {
+      "title": "Network problem",
+      "hint": "Check your connection. On restricted networks, set up a proxy in Network settings."
+    },
+    "ERR_TIMEOUT": {
+      "title": "The connection timed out",
+      "hint": "The server is slow or unreachable. Try again, raise the timeout, or use a proxy."
+    },
+    "ERR_PROXY": {
+      "title": "Couldn't connect through the proxy",
+      "hint": "Check the proxy type, address, port and login in Network settings."
+    },
+    "ERR_COOKIES": {
+      "title": "Couldn't read browser cookies",
+      "hint": "Close the browser completely and try again, or export a cookies.txt file instead."
+    },
+    "ERR_FFMPEG_MISSING": {
+      "title": "ffmpeg is missing",
+      "hint": "It's needed to merge and convert. Install the engine from Settings."
+    },
+    "ERR_ENGINE_MISSING": {
+      "title": "The download engine isn't installed",
+      "hint": "Install it now — it takes about a minute."
+    },
+    "ERR_ENGINE_INSTALL": {
+      "title": "Couldn't install the engine",
+      "hint": "Check your connection or proxy and try again. You can also set custom tool paths in Settings."
+    },
+    "ERR_CHECKSUM": {
+      "title": "Download verification failed",
+      "hint": "The file didn't match its official checksum and was discarded. Try again later."
+    },
+    "ERR_DISK": {
+      "title": "Couldn't write the file",
+      "hint": "Check there's enough free space and that the folder is writable."
+    },
+    "ERR_CANCELED": {
+      "title": "Canceled",
+      "hint": ""
+    },
+    "ERR_LIVE_NOT_STARTED": {
+      "title": "Live or upcoming stream",
+      "hint": "Live streams can't be downloaded. Try again after the stream has ended."
+    },
+    "ERR_FORMAT_UNAVAILABLE": {
+      "title": "That quality isn't available",
+      "hint": "Pick another quality or use a preset."
+    },
+    "ERR_SPOTIFY_UNSUPPORTED": {
+      "title": "This Spotify link isn't supported",
+      "hint": "Podcasts and shows can't be matched. Tracks, albums, playlists and artists work."
+    },
+    "ERR_SPOTIFY_MATCH": {
+      "title": "No matching source found",
+      "hint": "We couldn't find a public recording of this track."
+    },
+    "ERR_BUSY": {
+      "title": "Please wait",
+      "hint": "Another engine operation is still running."
+    },
+    "ERR_JOB_NOT_FOUND": {
+      "title": "Download not found",
+      "hint": "It may have been removed already."
+    }
+  }
+}

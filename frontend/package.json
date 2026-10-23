@@ -1,0 +1,46 @@
+{
+  "name": "dlyven-frontend",
+  "private": true,
+  "version": "1.0.2",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run i18n:check && tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "i18n:check": "node scripts/check-locales.mjs",
+    "fonts:check": "node scripts/check-fonts.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/inter": "5.1.0",
+    "@fontsource-variable/noto-naskh-arabic": "5.1.0",
+    "@fontsource-variable/noto-sans-arabic": "5.1.0",
+    "@fontsource-variable/vazirmatn": "5.1.0",
+    "@radix-ui/react-checkbox": "1.1.2",
+    "@radix-ui/react-dialog": "1.1.2",
+    "@radix-ui/react-popover": "1.1.2",
+    "@radix-ui/react-select": "2.1.2",
+    "@radix-ui/react-switch": "1.1.1",
+    "@radix-ui/react-tabs": "1.1.1",
+    "@radix-ui/react-tooltip": "1.1.4",
+    "clsx": "2.1.1",
+    "framer-motion": "11.11.17",
+    "i18next": "23.16.8",
+    "lucide-react": "0.460.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-i18next": "15.1.3",
+    "zustand": "5.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.9.0",
+    "@types/react": "18.3.12",
+    "@types/react-dom": "18.3.1",
+    "@vitejs/plugin-react": "4.3.4",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.49",
+    "tailwindcss": "3.4.17",
+    "typescript": "5.6.3",
+    "vite": "5.4.11"
+  }
+}

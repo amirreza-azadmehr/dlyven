@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "rename/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.x"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Go tests
+        run: go test ./internal/...
+      - name: Frontend checks
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run typecheck
+          npm run i18n:check
+          npm run fonts:check
+      - name: Site build
+        env:
+          PAGES_BASE: /dlyven/
+          PAGES_REPO: dlyven
+        run: node site/build.mjs

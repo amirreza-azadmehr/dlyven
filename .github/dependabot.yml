@@ -1,0 +1,59 @@
+version: 2
+updates:
+  # Security patches only on the current major. Large jumps (Wails, SQLite, Vite 8,
+  # Tailwind 4, Actions v7) are reviewed by hand so a bot bump cannot ship a broken
+  # or hostile dependency to people who install the app.
+  - package-ecosystem: gomod
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      go-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      go-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["patch"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "github.com/wailsapp/wails/v2"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "modernc.org/sqlite"
+
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      frontend-security:
+        applies-to: security-updates
+        patterns: ["*"]
+      frontend-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "vite"
+        update-types: ["version-update:semver-minor"]
+      - dependency-name: "tailwindcss"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 2
+    groups:
+      actions:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "softprops/action-gh-release"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]

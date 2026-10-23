@@ -1,0 +1,22 @@
+name: Feature
+description: Suggest an improvement
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      placeholder: What is hard or missing today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        Features that circumvent DRM, paywalls, or site terms will be closed.

@@ -1,0 +1,561 @@
+{
+  "app": {
+    "tagline": "Bağlantıyı yapıştır. Kaliteyi seç. Bitti.",
+    "legal": "Sadece sana ait olan ya da indirme iznin olan şeyleri indir."
+  },
+  "creator": {
+    "by": "Yapımcı: {{name}}",
+    "subtitle": "Dlyven'in yazarı",
+    "links": {
+      "github": "GitHub",
+      "linkedin": "LinkedIn",
+      "telegram": "Telegram"
+    }
+  },
+  "nav": {
+    "label": "Ana gezinme",
+    "home": "Ana sayfa",
+    "downloads": "İndirmeler",
+    "history": "Geçmiş",
+    "settings": "Ayarlar",
+    "activeBadge_one": "{{n}} etkin indirme",
+    "activeBadge_other": "{{n}} etkin indirme"
+  },
+  "titlebar": {
+    "minimize": "Simge durumuna küçült",
+    "maximize": "Ekranı kapla",
+    "restore": "Önceki boyuta getir",
+    "close": "Kapat"
+  },
+  "common": {
+    "cancel": "İptal",
+    "close": "Kapat",
+    "confirm": "Onayla",
+    "retry": "Tekrar dene",
+    "browse": "Gözat…",
+    "change": "Değiştir",
+    "copy": "Kopyala",
+    "copied": "Panoya kopyalandı",
+    "reset": "Sıfırla",
+    "default": "Varsayılan",
+    "auto": "Otomatik",
+    "none": "Hiçbiri",
+    "unknown": "Bilinmiyor",
+    "loading": "Yükleniyor…",
+    "back": "Geri",
+    "clear": "Temizle",
+    "selectAll": "Tümünü seç",
+    "selectNone": "Seçimi kaldır",
+    "open": "Aç",
+    "restartRequired": "Uygulama yeniden başlatıldıktan sonra geçerli olur.",
+    "unlimited": "Sınırsız",
+    "seconds": "saniye"
+  },
+  "home": {
+    "title": "Her şeyi indir.",
+    "subtitle": "YouTube, Instagram, TikTok, Spotify, X ve binden fazla siteden bir bağlantı yapıştırın.",
+    "inputLabel": "Analiz edilecek bağlantı",
+    "placeholder": "Bir bağlantı yapıştırın…",
+    "paste": "Yapıştır",
+    "analyze": "Analiz et",
+    "analyzing": "Analiz ediliyor…",
+    "cancelAnalyze": "Analizi iptal et",
+    "clearInput": "Temizle",
+    "newLink": "Yeni bağlantı",
+    "invalidUrl": "Bu bir bağlantıya benzemiyor.",
+    "otherSite": "Diğer site",
+    "matchedSource": "Eşleşen kaynak",
+    "worksWith": "Desteklenenler",
+    "andMore": "ve binden fazlası",
+    "dropHint": "ya da bir bağlantıyı veya bağlantı içeren bir .txt dosyasını buraya bırakın",
+    "dropOverlay": "Eklemek için bırakın",
+    "dropNoLinks": "Bıraktığınız içerikte bağlantı bulunamadı.",
+    "shortcutHint": "Yapıştırıp analiz etmek için herhangi bir yerde {{keys}} tuşlarına basın",
+    "clipboardFound": "Panoda bir bağlantı bulundu",
+    "clipboardAnalyze": "Analiz et"
+  },
+  "batch": {
+    "title_one": "{{n}} bağlantı",
+    "title_other": "{{n}} bağlantı",
+    "subtitle": "Hepsini bir ön ayarla tek seferde indirin ya da önce birini analiz edin.",
+    "mode": "İndirme biçimi",
+    "modeVideo": "En iyi video",
+    "mode1080": "Video, en fazla 1080p",
+    "modeMp3": "Ses (MP3)",
+    "modeM4a": "Ses (M4A)",
+    "start_one": "{{n}} bağlantıyı indir",
+    "start_other": "{{n}} bağlantıyı indir",
+    "analyzeFirst": "İlkini analiz et",
+    "queued_one": "{{n}} indirme kuyruğa eklendi",
+    "queued_other": "{{n}} indirme kuyruğa eklendi"
+  },
+  "result": {
+    "by": "{{name}}",
+    "views_one": "{{n}} görüntülenme",
+    "views_other": "{{n}} görüntülenme",
+    "duration": "Süre",
+    "uploaded": "Yüklenme tarihi",
+    "openSource": "Orijinal sayfayı aç",
+    "playlist_one": "Oynatma listesi · {{n}} öğe",
+    "playlist_other": "Oynatma listesi · {{n}} öğe",
+    "tabs": {
+      "label": "İndirme türü",
+      "video": "Video",
+      "audio": "Yalnızca ses",
+      "subtitles": "Altyazılar",
+      "thumbnail": "Küçük resim"
+    },
+    "presets": {
+      "label": "Hızlı ön ayarlar",
+      "best": "En iyi",
+      "2160": "4K",
+      "1080": "1080p",
+      "720": "720p",
+      "480": "480p",
+      "mp3": "Ses MP3",
+      "m4a": "Ses M4A",
+      "unavailable": "Bu öğe için kullanılamıyor"
+    },
+    "badges": {
+      "best": "En iyi",
+      "recommended": "Önerilen",
+      "smallest": "En küçük",
+      "hdr": "HDR",
+      "merged": "+ ses",
+      "mergedHint": "Bu akışta ses yok. En iyi ses parçası otomatik olarak birleştirilecek.",
+      "approx": "Tahmini boyut"
+    },
+    "columns": {
+      "quality": "Kalite",
+      "fps": "FPS",
+      "codec": "Kodek",
+      "container": "Biçim",
+      "bitrate": "Bit hızı",
+      "size": "Boyut",
+      "audio": "Ses"
+    },
+    "video": {
+      "noFormats": "Video akışı bulunamadı. Ses sekmesini deneyin.",
+      "groupStreams_one": "{{n}} akış",
+      "groupStreams_other": "{{n}} akış",
+      "unknownResolution": "Diğer",
+      "container": "Farklı kaydet",
+      "containerHint": "MP4 her yerde oynatılır. MKV tüm kodekleri ve altyazıları korur. WebM, VP9/AV1 akışları için uygundur.",
+      "playlistHint": "Biçimler öğeden öğeye değişir; bu yüzden bir kalite sınırı seçin, her öğe bu sınıra kadar en iyi eşleşmeyi alır.",
+      "qualityCap": "Kalite",
+      "embedSubsNote_one": "{{n}} altyazı parçası da eklenecek.",
+      "embedSubsNote_other": "{{n}} altyazı parçası da eklenecek."
+    },
+    "audio": {
+      "format": "Biçim",
+      "bitrate": "Bit hızı",
+      "best": "Mevcut en iyisi",
+      "lossless": "Kayıpsız — bit hızı uygulanmaz",
+      "embedThumbnail": "Kapak resmini göm",
+      "embedMetadata": "Etiketleri yaz (başlık, sanatçı…)",
+      "source": "Kaynak akış",
+      "sourceAuto": "Otomatik (en iyi)",
+      "formats": {
+        "mp3": "Her yerde çalar",
+        "m4a": "AAC — boyutuna göre harika kalite",
+        "opus": "En verimli, modern oynatıcılar için",
+        "flac": "Kayıpsız, büyük dosyalar",
+        "wav": "Sıkıştırılmamış, düzenleme için"
+      }
+    },
+    "subtitles": {
+      "none": "Bu öğe için altyazı yok.",
+      "search": "Dilleri filtrele…",
+      "manual": "Altyazılar",
+      "auto": "Otomatik oluşturulan",
+      "autoBadge": "Otomatik",
+      "mode": "Video indirirken",
+      "embed": "Videoya göm",
+      "file": "Ayrı dosya olarak kaydet",
+      "format": "Dosya biçimi",
+      "selected_one": "{{n}} dil seçildi",
+      "selected_other": "{{n}} dil seçildi",
+      "hintEmbed": "Seçilen altyazılar, Video sekmesinden indirdiğinizde videoya gömülür. Yalnızca altyazı dosyalarını almak için buradan indirin.",
+      "noMatch": "“{{q}}” ile eşleşen dil yok."
+    },
+    "thumbnail": {
+      "size": "Boyut",
+      "format": "Farklı kaydet",
+      "original": "Orijinal",
+      "dimensions": "{{w}} × {{h}}"
+    },
+    "playlist": {
+      "items": "Öğeler",
+      "selected": "{{total}} öğeden {{n}} tanesi seçildi",
+      "untitled": "Başlıksız"
+    },
+    "spotify": {
+      "title": "Ses, eşleşen bir kaynaktan alınır",
+      "body": "Spotify sesleri DRM korumalıdır ve asla Spotify'dan indirilmez. Dlyven parça bilgilerini okur, herkese açık eşleşen bir kaydı (YouTube Music) bulur ve dosyayı Spotify'daki başlık, sanatçı, albüm ve kapakla etiketler. Ses sürümü ve kalitesi Spotify'dakinden farklı olabilir."
+    },
+    "destination": {
+      "folder": "Kaydedilecek yer",
+      "changeFolder": "Klasörü değiştir",
+      "chooseFolderTitle": "İndirmelerin kaydedileceği yeri seçin",
+      "filename": "Dosya adı",
+      "filenameMulti": "İlk dosya adı",
+      "editTemplate": "Şablonu ayarlarda düzenle"
+    },
+    "download": "İndir",
+    "downloadCount_one": "{{n}} öğeyi indir",
+    "downloadCount_other": "{{n}} öğeyi indir",
+    "nothingSelected": "En az bir öğe seçin.",
+    "noSubsSelected": "En az bir altyazı dili seçin.",
+    "queued": "İndirmelere eklendi",
+    "queuedMany_one": "{{n}} öğe indirmelere eklendi",
+    "queuedMany_other": "{{n}} öğe indirmelere eklendi",
+    "viewDownloads": "Görüntüle"
+  },
+  "downloads": {
+    "title": "İndirmeler",
+    "subtitle": "Devam eden ve yeni biten her şey.",
+    "filters": {
+      "label": "İndirmeleri filtrele",
+      "all": "Tümü",
+      "active": "Etkin",
+      "completed": "Tamamlanan",
+      "failed": "Başarısız"
+    },
+    "clearFinished": "Bitenleri temizle",
+    "emptyTitle": "Henüz bir şey indirilmiyor",
+    "emptyBody": "Başlamak için Ana sayfada bir bağlantı yapıştırın.",
+    "emptyFilter": "Bu filtreyle eşleşen indirme yok.",
+    "goHome": "Bağlantı yapıştır",
+    "status": {
+      "queued": "Sırada",
+      "downloading": "İndiriliyor",
+      "merging": "Ses ve görüntü birleştiriliyor",
+      "converting": "Dönüştürülüyor",
+      "paused": "Duraklatıldı",
+      "retrying": "Birazdan yeniden denenecek",
+      "done": "Tamamlandı",
+      "failed": "Başarısız",
+      "canceled": "İptal edildi"
+    },
+    "actions": {
+      "pause": "Duraklat",
+      "resume": "Sürdür",
+      "cancel": "İptal et",
+      "retry": "Yeniden dene",
+      "remove": "Listeden kaldır",
+      "openFile": "Dosyayı aç",
+      "showInFolder": "Klasörde göster",
+      "copyLink": "Orijinal bağlantıyı kopyala"
+    },
+    "part": "Akış {{part}}/{{parts}}",
+    "eta": "{{time}} kaldı",
+    "perSecond": "{{speed}}/sn",
+    "sizeOf": "{{done}} / {{total}}",
+    "progressLabel": "{{title}} indirme ilerlemesi",
+    "attempt": "{{n}}. deneme",
+    "doneToast": "İndirme tamamlandı",
+    "failedToast": "İndirme başarısız",
+    "matched": "Eşleşen ses"
+  },
+  "history": {
+    "title": "Geçmiş",
+    "subtitle": "Biten tüm indirmeler, aranabilir.",
+    "search": "Başlık, kanal veya bağlantıyla ara…",
+    "allPlatforms": "Tüm platformlar",
+    "allStatuses": "Tüm sonuçlar",
+    "statusDone": "Tamamlanan",
+    "statusFailed": "Başarısız",
+    "count_one": "{{n}} öğe",
+    "count_other": "{{n}} öğe",
+    "emptyTitle": "Henüz geçmiş yok",
+    "emptyBody": "Biten indirmeler burada görünür, böylece onları yeniden bulabilirsiniz.",
+    "noResults": "Aramanızla eşleşen bir şey yok.",
+    "clear": "Geçmişi temizle",
+    "clearTitle": "Tüm geçmiş temizlensin mi?",
+    "clearBody": "Bu yalnızca listeyi siler. İndirilen dosyalar diskinizde kalır.",
+    "clearConfirm": "Geçmişi temizle",
+    "redownload": "Yeniden analiz et",
+    "delete": "Geçmişten kaldır",
+    "fileMissing": "Dosya taşınmış veya silinmiş",
+    "loadMore": "Daha fazla göster"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "subtitle": "Otomatik olarak kaydedilir.",
+    "sections": {
+      "appearance": "Görünüm",
+      "downloads": "İndirmeler",
+      "network": "Ağ",
+      "cookies": "Oturum ve çerezler",
+      "engine": "İndirme motoru",
+      "behavior": "Davranış",
+      "advanced": "Gelişmiş"
+    },
+    "language": "Dil",
+    "languageSystem": "Sistemle aynı",
+    "theme": "Tema",
+    "themes": {
+      "system": "Sistem",
+      "dark": "Koyu",
+      "light": "Açık"
+    },
+    "accent": "Vurgu rengi",
+    "accents": {
+      "indigo": "Çivit",
+      "violet": "Mor",
+      "blue": "Mavi",
+      "teal": "Camgöbeği",
+      "rose": "Gül",
+      "amber": "Kehribar"
+    },
+    "nativeDigits": "Yerel rakamlar",
+    "nativeDigitsHint": "Sayıları 0123 yerine {{sample}} olarak göster.",
+    "calendar": "Takvim",
+    "calendars": {
+      "gregorian": "Miladi",
+      "jalali": "Hicri Şemsi (Celali)"
+    },
+    "translucency": "Yarı saydam pencere",
+    "translucencyHint": "Windows 11'de Mica, macOS'ta buzlu cam efekti kullanır.",
+    "downloadFolder": "İndirme klasörü",
+    "rememberLastFolder": "Son kullandığım klasörü hatırla",
+    "platformFolders": "Platforma özel klasörler",
+    "platformFoldersHint": "Belirli bir sitenin indirmelerini kendi klasörüne gönderin.",
+    "addPlatformFolder": "Şunun için klasör ekle…",
+    "removePlatformFolder": "Kaldır",
+    "filenameTemplate": "Dosya adı şablonu",
+    "filenameTemplateHint": "Eklemek için bir alana tıklayın. Uzantı otomatik eklenir. Geçersiz karakterler değiştirilir ve mevcut dosyaların üzerine asla yazılmaz.",
+    "preview": "Önizleme",
+    "fields": {
+      "title": "Başlık",
+      "uploader": "Kanal",
+      "quality": "Kalite",
+      "resolution": "Çözünürlük",
+      "fps": "Kare hızı",
+      "platform": "Platform",
+      "id": "Kimlik",
+      "date": "Yüklenme tarihi",
+      "playlist": "Oynatma listesi",
+      "index": "Listedeki sıra",
+      "artist": "Sanatçı",
+      "album": "Albüm",
+      "track": "Parça numarası"
+    },
+    "maxConcurrent": "Eş zamanlı indirmeler",
+    "speedLimit": "Hız sınırı",
+    "speedLimitHint": "İndirme başına, KB/sn cinsinden. 0 sınırsız demektir.",
+    "defaultContainer": "Varsayılan video biçimi",
+    "defaultAudio": "Varsayılan ses biçimi",
+    "defaultBitrate": "Varsayılan ses bit hızı",
+    "embedThumbnail": "Küçük resimleri ve kapakları göm",
+    "embedMetadata": "Meta veri etiketlerini yaz",
+    "embedChapters": "Bölümleri göm",
+    "proxy": "Proxy kullan",
+    "proxyHint": "Analiz, indirme ve motor güncellemelerini bir proxy üzerinden yönlendirir — kısıtlı ağlarda işe yarar.",
+    "proxyType": "Tür",
+    "proxyHost": "Sunucu",
+    "proxyHostPlaceholder": "127.0.0.1 veya tam bir URL",
+    "proxyPort": "Bağlantı noktası",
+    "proxyUser": "Kullanıcı adı",
+    "proxyPass": "Parola",
+    "optional": "İsteğe bağlı",
+    "userAgent": "Özel User-Agent",
+    "userAgentHint": "Motorun varsayılanını kullanmak için boş bırakın.",
+    "retries": "Yeniden deneme",
+    "retriesHint": "Başarısız ağ istekleri ve indirmeler artan aralıklarla yeniden denenir.",
+    "timeout": "Bağlantı zaman aşımı",
+    "cookiesIntro": "Bazı içerikler (gizli Instagram gönderileri, yaş sınırlı veya yalnızca üyelere özel videolar) oturum açmanızı gerektirir. Dlyven tarayıcınızdaki oturumu kullanabilir — parolanız asla görülmez ve saklanmaz.",
+    "cookiesMode": "Oturum kaynağı",
+    "cookiesModes": {
+      "none": "Çerez kullanma",
+      "browser": "Tarayıcımın çerezlerini kullan",
+      "file": "Bir cookies.txt dosyası kullan"
+    },
+    "cookiesBrowser": "Tarayıcı",
+    "cookiesBrowserHint": "Önce o tarayıcıda siteye giriş yapın. Dlyven çerezleri okurken Chrome ve Edge'in kapalı olması gerekebilir.",
+    "cookiesFile": "cookies.txt dosyası",
+    "cookiesFileHint": "Bir “cookies.txt” tarayıcı eklentisiyle dışa aktarın (Netscape biçimi).",
+    "chooseCookies": "cookies.txt seç",
+    "cookiesWarning": "Çerezler hesaplarınıza erişim sağlar. Yalnızca kendi dışa aktardığınız dosyaları kullanın ve gizli tutun.",
+    "engineIntro": "Dlyven bağlantıları okumak için yt-dlp, birleştirme ve dönüştürme için ffmpeg, tüm YouTube biçimlerine erişmek için de Deno kullanır. Bunlar otomatik olarak kurulur ve doğrulanır.",
+    "component": {
+      "yt-dlp": "yt-dlp",
+      "ffmpeg": "ffmpeg",
+      "deno": "Deno (JavaScript çalışma ortamı)"
+    },
+    "notInstalled": "Kurulu değil",
+    "source": {
+      "managed": "Dlyven tarafından yönetiliyor",
+      "system": "Bu sistemde bulundu",
+      "custom": "Özel yol"
+    },
+    "updateAvailable": "Güncelleme var: {{version}}",
+    "upToDate": "Güncel",
+    "checkUpdates": "Güncellemeleri denetle",
+    "updateEngine": "Motoru güncelle",
+    "reinstall": "Yeniden kur",
+    "installEngine": "Motoru kur",
+    "autoUpdate": "yt-dlp'yi otomatik güncelle",
+    "autoUpdateHint": "Siteler sık değişir; yt-dlp'yi güncel tutmak çoğu hatayı önler.",
+    "customPaths": "Özel yollar",
+    "ytDlpPath": "yt-dlp yolu",
+    "ffmpegPath": "ffmpeg yolu (dosya veya klasör)",
+    "pathAuto": "Otomatik",
+    "chooseFile": "Dosya seç",
+    "chooseExecutableTitle": "Çalıştırılabilir dosyayı seçin",
+    "clipboardWatch": "Panodaki bağlantıları algıla",
+    "clipboardWatchHint": "Dlyven'e geri döndüğünüzde kopyalanan bağlantıyı analiz etmeyi önerir.",
+    "afterDownload": "Bir indirme bittiğinde",
+    "openFolderOnDone": "Klasörü aç",
+    "notify": "Bildirim göster",
+    "playSound": "Ses çal",
+    "diagnostics": "Tanılama",
+    "diagnosticsHint": "Hata raporunda paylaşmak için sürümleri, ayarları (parolalar çıkarılmış) ve son günlük satırlarını kopyalar.",
+    "copyDiagnostics": "Tanılama bilgilerini kopyala",
+    "openLogs": "Günlük klasörünü aç",
+    "dataFolder": "Veri klasörü",
+    "resetAll": "Varsayılanlara sıfırla",
+    "resetTitle": "Tüm ayarlar sıfırlansın mı?",
+    "resetBody": "İndirmeleriniz ve geçmişiniz korunur. Dil aynı kalır.",
+    "resetDone": "Ayarlar sıfırlandı",
+    "about": "{{name}} {{version}}",
+    "shortcuts": "Klavye kısayolları",
+    "shortcutList": {
+      "paste": "Yapıştır ve analiz et",
+      "download": "İndirmeyi başlat",
+      "settings": "Ayarları aç",
+      "cancel": "İptal / geri"
+    }
+  },
+  "engine": {
+    "settingUp": "İndirme motoru hazırlanıyor",
+    "settingUpBody": "Tek seferlik kurulum. Dosyalar resmi kaynaklarından indirilir ve doğrulanır.",
+    "ready": "Motor hazır",
+    "updated": "Motor güncellendi",
+    "upToDate": "Motor güncel",
+    "failed": "Motor kurulumu başarısız",
+    "stages": {
+      "checking": "Denetleniyor…",
+      "downloading": "İndiriliyor",
+      "verifying": "Sağlama toplamı doğrulanıyor…",
+      "extracting": "Kuruluyor…",
+      "done": "Hazır",
+      "error": "Başarısız"
+    }
+  },
+  "errors": {
+    "suggestion": "Ne yapabilirsiniz",
+    "details": "Teknik ayrıntılar",
+    "actions": {
+      "openCookies": "Oturumu ayarla",
+      "openNetwork": "Ağ ayarları",
+      "installEngine": "Motoru kur",
+      "updateEngine": "Motoru güncelle",
+      "retry": "Tekrar dene"
+    },
+    "ERR_UNKNOWN": {
+      "title": "Bir şeyler ters gitti",
+      "hint": "Tekrar deneyin. Sorun sürerse motoru güncelleyin veya Ayarlar'dan tanılama bilgilerini kopyalayın."
+    },
+    "ERR_INVALID_URL": {
+      "title": "Bu geçerli bir bağlantı değil",
+      "hint": "Tam adresi https:// ile başlayacak şekilde tarayıcınızdan kopyalayın."
+    },
+    "ERR_UNSUPPORTED_URL": {
+      "title": "Bu site desteklenmiyor",
+      "hint": "Ana sayfa veya arama sayfası yerine doğrudan video ya da gönderi sayfasının bağlantısını deneyin."
+    },
+    "ERR_LOGIN_REQUIRED": {
+      "title": "Oturum açmanız gerekiyor",
+      "hint": "Bu içerik giriş gerektiriyor. Oturum ve çerezler ayarlarında “Tarayıcımın çerezlerini kullan” seçeneğini açın."
+    },
+    "ERR_AGE_RESTRICTED": {
+      "title": "Yaş sınırlı içerik",
+      "hint": "Bu içeriği görebilen bir hesapla tarayıcı çerezleri üzerinden oturum açın."
+    },
+    "ERR_PRIVATE": {
+      "title": "Bu içerik gizli",
+      "hint": "Yalnızca erişimi olan hesaplar görebilir. Böyle bir hesapla oturum açılmış bir tarayıcının çerezlerini kullanın."
+    },
+    "ERR_GEO_BLOCKED": {
+      "title": "Bölgenizde kullanılamıyor",
+      "hint": "İçeriğin erişilebilir olduğu bir bölgede bulunan bir proxy deneyin."
+    },
+    "ERR_NOT_FOUND": {
+      "title": "İçerik bulunamadı",
+      "hint": "Silinmiş olabilir ya da bağlantı eksik olabilir."
+    },
+    "ERR_RATE_LIMITED": {
+      "title": "Çok fazla istek",
+      "hint": "Site istekleri sınırlıyor. Birkaç dakika bekleyin, çerezlerle oturum açın veya bir proxy kullanın."
+    },
+    "ERR_DRM": {
+      "title": "Bu içerik DRM korumalı",
+      "hint": "Korumalı içerik indirilemez."
+    },
+    "ERR_NETWORK": {
+      "title": "Ağ sorunu",
+      "hint": "Bağlantınızı kontrol edin. Kısıtlı ağlarda Ağ ayarlarından bir proxy ayarlayın."
+    },
+    "ERR_TIMEOUT": {
+      "title": "Bağlantı zaman aşımına uğradı",
+      "hint": "Sunucu yavaş veya erişilemiyor. Tekrar deneyin, zaman aşımını artırın ya da proxy kullanın."
+    },
+    "ERR_PROXY": {
+      "title": "Proxy üzerinden bağlanılamadı",
+      "hint": "Ağ ayarlarında proxy türünü, adresini, bağlantı noktasını ve oturum bilgilerini kontrol edin."
+    },
+    "ERR_COOKIES": {
+      "title": "Tarayıcı çerezleri okunamadı",
+      "hint": "Tarayıcıyı tamamen kapatıp tekrar deneyin ya da bunun yerine bir cookies.txt dosyası dışa aktarın."
+    },
+    "ERR_FFMPEG_MISSING": {
+      "title": "ffmpeg eksik",
+      "hint": "Birleştirme ve dönüştürme için gerekli. Motoru Ayarlar'dan kurun."
+    },
+    "ERR_ENGINE_MISSING": {
+      "title": "İndirme motoru kurulu değil",
+      "hint": "Şimdi kurun — yaklaşık bir dakika sürer."
+    },
+    "ERR_ENGINE_INSTALL": {
+      "title": "Motor kurulamadı",
+      "hint": "Bağlantınızı veya proxy'nizi kontrol edip tekrar deneyin. Ayarlar'dan özel araç yolları da belirleyebilirsiniz."
+    },
+    "ERR_CHECKSUM": {
+      "title": "İndirme doğrulaması başarısız",
+      "hint": "Dosya resmi sağlama toplamıyla eşleşmedi ve silindi. Daha sonra tekrar deneyin."
+    },
+    "ERR_DISK": {
+      "title": "Dosya yazılamadı",
+      "hint": "Yeterli boş alan olduğundan ve klasörün yazılabilir olduğundan emin olun."
+    },
+    "ERR_CANCELED": {
+      "title": "İptal edildi",
+      "hint": ""
+    },
+    "ERR_LIVE_NOT_STARTED": {
+      "title": "Canlı veya yaklaşan yayın",
+      "hint": "Canlı yayınlar indirilemez. Yayın bittikten sonra tekrar deneyin."
+    },
+    "ERR_FORMAT_UNAVAILABLE": {
+      "title": "Bu kalite mevcut değil",
+      "hint": "Başka bir kalite seçin veya bir ön ayar kullanın."
+    },
+    "ERR_SPOTIFY_UNSUPPORTED": {
+      "title": "Bu Spotify bağlantısı desteklenmiyor",
+      "hint": "Podcast'ler ve programlar eşleştirilemez. Parçalar, albümler, çalma listeleri ve sanatçılar çalışır."
+    },
+    "ERR_SPOTIFY_MATCH": {
+      "title": "Eşleşen kaynak bulunamadı",
+      "hint": "Bu parçanın herkese açık bir kaydını bulamadık."
+    },
+    "ERR_BUSY": {
+      "title": "Lütfen bekleyin",
+      "hint": "Başka bir motor işlemi hâlâ sürüyor."
+    },
+    "ERR_JOB_NOT_FOUND": {
+      "title": "İndirme bulunamadı",
+      "hint": "Zaten kaldırılmış olabilir."
+    }
+  }
+}
