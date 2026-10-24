@@ -182,7 +182,7 @@ func TestDownloadAndApply(t *testing.T) {
 	if b, _ := os.ReadFile(exe); string(b) != string(newBin) {
 		t.Fatalf("not replaced: %q", b)
 	}
-	if fi, _ := os.Stat(exe); fi.Mode().Perm()&0o100 == 0 {
+	if fi, _ := os.Stat(exe); runtime.GOOS != "windows" && fi.Mode().Perm()&0o100 == 0 { // no exec bit on Windows
 		t.Error("new executable is not executable")
 	}
 	prev, _ := filepath.Glob(filepath.Join(dir, stagePrefix+"*", "previous-Dlyven"))
