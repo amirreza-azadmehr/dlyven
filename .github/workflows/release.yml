@@ -121,6 +121,16 @@ jobs:
           else
             echo "version=${DECIDED_VERSION}" >> "$GITHUB_OUTPUT"
           fi
+      # wails.json feeds the macOS Info.plist and the Windows file/installer version; without
+      # this they'd show whatever version was last committed. Numeric part only (PR builds
+      # are 1.2.3-pr.N), so Windows version resources get plain x.y.z.
+      - name: Stamp version into wails.json
+        shell: bash
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          node -e 'const fs = require("fs"); const j = JSON.parse(fs.readFileSync("wails.json", "utf8")); j.info.productVersion = process.argv[1]; fs.writeFileSync("wails.json", JSON.stringify(j, null, 2) + "\n")' "${VERSION%%-*}"
+          grep '"productVersion"' wails.json
 
       # `secrets` can't be used in `if:`, so presence becomes step outputs here.
       # New names first, legacy names (MACOS_*, WIN_*) as fallback.
