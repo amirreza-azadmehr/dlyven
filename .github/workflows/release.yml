@@ -68,24 +68,27 @@ jobs:
     permissions:
       contents: read
       actions: read # SignPath downloads the unsigned exe from this run's artifacts
+    # Asset names are stable (no version) so README links to releases/latest/download/<name>
+    # keep working, and the in-app updater (internal/updater/assets.go) can find them.
+    # Rename one here and there together; TestAssetNamesMatchWorkflow catches drift.
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: windows-amd64
             os: windows-latest
-            artifact: Dlyven-windows-amd64.exe
-            installer: Dlyven-windows-amd64-installer.exe
+            artifact: Dlyven-Windows-x64-Portable.exe
+            installer: Dlyven-Windows-x64-Setup.exe
           - name: macos-universal
             os: macos-latest
-            artifact: Dlyven-macos-universal.zip
-            installer: Dlyven-macos-universal.dmg
+            artifact: Dlyven-macOS-Universal.zip
+            installer: Dlyven-macOS-Universal.dmg
           - name: linux-amd64
             os: ubuntu-24.04
-            artifact: Dlyven-linux-amd64
+            artifact: Dlyven-Linux-x64
           - name: linux-arm64
             os: ubuntu-24.04-arm
-            artifact: Dlyven-linux-arm64
+            artifact: Dlyven-Linux-ARM64
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
@@ -302,6 +305,13 @@ jobs:
           # Empty → sign-macos.sh picks the imported identity, or ad-hoc signs without one.
           APPLE_SIGNING_IDENTITY: ${{ steps.signing.outputs.apple_sign == 'true' && (secrets.APPLE_SIGNING_IDENTITY || secrets.APPLE_SIGN_IDENTITY) || '' }}
         run: ./scripts/build.sh darwin
+      # Lays out the drag-to-Applications window without needing Finder (see build/darwin/dmg-settings.py).
+      - name: Install dmgbuild
+        if: runner.os == 'macOS'
+        run: |
+          python3 -m venv "$RUNNER_TEMP/dmgbuild"
+          "$RUNNER_TEMP/dmgbuild/bin/pip" install --quiet dmgbuild==1.6.7
+          echo "$RUNNER_TEMP/dmgbuild/bin" >> "$GITHUB_PATH"
       - name: Package macOS dmg
         if: runner.os == 'macOS'
         run: ./scripts/package-macos.sh build/bin/Dlyven.app build/bin/Dlyven.dmg
@@ -436,8 +446,19 @@ jobs:
             git tag "v${VERSION}" "${GITHUB_SHA}"
             git push origin "v${VERSION}"
           fi
+      - name: Download table
+        id: notes
+        env:
+          TAG: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', needs.decide.outputs.version) }}
+        run: |
+          bash .github/scripts/release-notes.sh "$TAG" dist > release-notes.md
+          cat release-notes.md
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      # body_path goes above GitHub's generated changelog.
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
-          tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', needs.decide.outputs.version) }}
+          tag_name: ${{ steps.notes.outputs.tag }}
+          name: Dlyven ${{ steps.notes.outputs.tag }}
+          body_path: release-notes.md
           generate_release_notes: true
           files: dist/*

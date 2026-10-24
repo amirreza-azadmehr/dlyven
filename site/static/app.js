@@ -94,11 +94,13 @@
       }
       assets.forEach((a) => {
         const name = a.name.toLowerCase()
+        // Per-file checksums and signatures; SHA256SUMS.txt is linked below the cards.
+        if (/\.(sha256|asc)$/.test(name) || name === "sha256sums.txt") return
         const kind = name.includes("win") ? "windows"
           : name.includes("mac") || name.includes("darwin") ? "macos"
           : name.includes("linux") ? "linux"
           : "other"
-        if (kind === "other" && !name.includes("sha")) return
+        if (kind === "other") return
         const row = document.createElement("div")
         row.className = "card" + (kind === os ? " os" : "")
         const link = document.createElement("a")
@@ -112,7 +114,7 @@
         row.appendChild(meta)
         box.appendChild(row)
       })
-      const sums = assets.find((a) => /sha256/i.test(a.name))
+      const sums = assets.find((a) => a.name === "SHA256SUMS.txt")
       if (sums) {
         const s = document.createElement("p")
         s.innerHTML = `<a href="${sums.browser_download_url}">${sums.name}</a>`
