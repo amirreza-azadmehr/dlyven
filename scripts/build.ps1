@@ -3,8 +3,10 @@
 #   powershell -ExecutionPolicy Bypass -File scripts\build.ps1             # portable Dlyven.exe
 #   powershell -ExecutionPolicy Bypass -File scripts\build.ps1 -Installer  # + NSIS installer (needs makensis on PATH)
 #   powershell -ExecutionPolicy Bypass -File scripts\build.ps1 -Arch arm64
+#   ... -NoSign   # build only; CI signs in separate steps (PFX / Azure / SignPath)
 param(
   [switch]$Installer,
+  [switch]$NoSign,
   [ValidateSet('amd64', 'arm64')][string]$Arch = 'amd64',
   [string]$Version = ''
 )
@@ -26,12 +28,12 @@ $wailsArgs = @('build', '-clean', '-trimpath', '-platform', "windows/$Arch", '-w
 if ($Installer) { $wailsArgs += '-nsis' }
 & wails @wailsArgs
 if ($LASTEXITCODE -ne 0) { throw 'wails build failed' }
-& (Join-Path $PSScriptRoot 'sign-windows.ps1') -Exe 'build\bin\Dlyven.exe'
-if ($Installer) {
-  Get-ChildItem 'build\bin\*.exe' | ForEach-Object {
-    if ($_.Name -ne 'Dlyven.exe') {
-      & (Join-Path $PSScriptRoot 'sign-windows.ps1') -Exe $_.FullName
-    }
+if (-not $NoSign) {
+  & (Join-Path $PSScriptRoot 'sign-windows.ps1') -Exe 'build\bin\Dlyven.exe'
+  if ($Installer) {
+    # Repack so the installer carries the signed exe, then sign the installer.
+    & (Join-Path $PSScriptRoot 'package-nsis.ps1') -Arch $Arch
+    & (Join-Path $PSScriptRoot 'sign-windows.ps1') -Exe "build\bin\Dlyven-$Arch-installer.exe"
   }
 }
 Write-Host "OK: build\bin\Dlyven.exe$(if ($Installer) { ' (+ NSIS installer)' })"

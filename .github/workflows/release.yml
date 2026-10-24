@@ -4,10 +4,19 @@ name: Release
 # and GitHub fills in the changelog from the commits.
 # Docs / site / README / locale-only pushes do nothing here.
 # Manual tag v*.*.* still works. Add [skip release] to a commit to opt out.
+# Pull requests build every OS unsigned (fallback mode) and publish nothing.
+#
+# Signing is optional and secret-driven; see SIGNING.md. Missing secrets never
+# fail the build, they only drop that platform to its fallback:
+#   macOS    Developer ID + notarization, else ad-hoc signature
+#   Windows  PFX, Azure Artifact Signing, or SignPath, else unsigned
+#   Linux    SHA256SUMS.txt (+ .asc when a GPG key is set)
 on:
   push:
     branches: [main]
     tags: ["v*.*.*"]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       force:
@@ -17,10 +26,10 @@ on:
 
 concurrency:
   group: release-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   decide:
@@ -31,7 +40,7 @@ jobs:
       should: ${{ steps.d.outputs.should }}
       version: ${{ steps.d.outputs.version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
           fetch-tags: true
@@ -52,9 +61,13 @@ jobs:
       !cancelled() &&
       (
         (startsWith(github.ref, 'refs/tags/v') && needs.decide.result == 'skipped') ||
+        (github.event_name == 'pull_request' && needs.decide.result == 'skipped') ||
         (needs.decide.result == 'success' && needs.decide.outputs.should == 'true')
       )
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      actions: read # SignPath downloads the unsigned exe from this run's artifacts
     strategy:
       fail-fast: false
       matrix:
@@ -62,9 +75,11 @@ jobs:
           - name: windows-amd64
             os: windows-latest
             artifact: Dlyven-windows-amd64.exe
+            installer: Dlyven-windows-amd64-installer.exe
           - name: macos-universal
             os: macos-latest
             artifact: Dlyven-macos-universal.zip
+            installer: Dlyven-macos-universal.dmg
           - name: linux-amd64
             os: ubuntu-24.04
             artifact: Dlyven-linux-amd64
@@ -72,11 +87,11 @@ jobs:
             os: ubuntu-24.04-arm
             artifact: Dlyven-linux-arm64
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
         with:
           go-version: "1.25.x"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: "20"
           cache: npm
@@ -91,53 +106,247 @@ jobs:
       - name: Version
         id: ver
         shell: bash
+        env:
+          DECIDED_VERSION: ${{ needs.decide.outputs.version }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          elif [[ "${GITHUB_EVENT_NAME}" == pull_request ]]; then
+            base="$(grep -o '"productVersion": *"[^"]*"' wails.json | cut -d'"' -f4)"
+            echo "version=${base}-pr.${PR_NUMBER}" >> "$GITHUB_OUTPUT"
           else
-            echo "version=${{ needs.decide.outputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "version=${DECIDED_VERSION}" >> "$GITHUB_OUTPUT"
           fi
-      - name: Import Apple Developer ID
-        if: runner.os == 'macOS'
+
+      # `secrets` can't be used in `if:`, so presence becomes step outputs here.
+      # New names first, legacy names (MACOS_*, WIN_*) as fallback.
+      - name: Detect signing secrets
+        id: signing
+        if: runner.os != 'Linux'
+        shell: bash
         env:
-          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
-          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE || secrets.MACOS_CERTIFICATE_P12 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD || secrets.MACOS_CERTIFICATE_PASSWORD }}
+          APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
+          APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+          APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE || secrets.WIN_CERTIFICATE_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD || secrets.WIN_CERTIFICATE_PASSWORD }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SIGNING_ENDPOINT: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          AZURE_SIGNING_ACCOUNT_NAME: ${{ secrets.AZURE_SIGNING_ACCOUNT_NAME }}
+          AZURE_SIGNING_CERTIFICATE_PROFILE: ${{ secrets.AZURE_SIGNING_CERTIFICATE_PROFILE }}
+          SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+          SIGNPATH_ORGANIZATION_ID: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+          SIGNPATH_PROJECT_SLUG: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
+          SIGNPATH_SIGNING_POLICY_SLUG: ${{ secrets.SIGNPATH_SIGNING_POLICY_SLUG }}
+        run: bash .github/scripts/detect-signing.sh
+
+      # ---------------------------------------------------------------- Windows
+      - name: NSIS
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          if [ -z "${MACOS_CERTIFICATE_P12}" ]; then
-            echo "No MACOS_CERTIFICATE_P12 secret — macOS build will stay unsigned (Gatekeeper warning)."
-            exit 0
-          fi
-          CERT="$RUNNER_TEMP/dlyven.p12"
-          echo "$MACOS_CERTIFICATE_P12" | base64 --decode > "$CERT"
-          security create-keychain -p "$MACOS_CERTIFICATE_PASSWORD" "$RUNNER_TEMP/dlyven.keychain"
-          security set-keychain-settings -lut 21600 "$RUNNER_TEMP/dlyven.keychain"
-          security unlock-keychain -p "$MACOS_CERTIFICATE_PASSWORD" "$RUNNER_TEMP/dlyven.keychain"
-          security import "$CERT" -P "$MACOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$RUNNER_TEMP/dlyven.keychain"
-          security list-keychain -d user -s "$RUNNER_TEMP/dlyven.keychain"
-          security set-key-partition-list -S apple-tool:,apple: -s -k "$MACOS_CERTIFICATE_PASSWORD" "$RUNNER_TEMP/dlyven.keychain"
-          rm -f "$CERT"
+          if (Get-Command makensis -ErrorAction SilentlyContinue) { exit 0 }
+          $dir = Join-Path ${env:ProgramFiles(x86)} 'NSIS'
+          if (-not (Test-Path "$dir\makensis.exe")) { choco install nsis -y --no-progress }
+          if (-not (Test-Path "$dir\makensis.exe")) { throw 'makensis not found after installing NSIS' }
+          Add-Content -Path $env:GITHUB_PATH -Value $dir
       - name: Build Windows
         if: runner.os == 'Windows'
         shell: pwsh
         env:
           VERSION: ${{ steps.ver.outputs.version }}
-          WIN_CERTIFICATE_PFX: ${{ secrets.WIN_CERTIFICATE_PFX }}
-          WIN_CERTIFICATE_PASSWORD: ${{ secrets.WIN_CERTIFICATE_PASSWORD }}
-        run: powershell -ExecutionPolicy Bypass -File scripts\build.ps1 -Version $env:VERSION
+        run: powershell -ExecutionPolicy Bypass -File scripts\build.ps1 -Version $env:VERSION -Installer -NoSign
+
+      # App exe first, so the installer below packs a signed copy.
+      - name: Sign app exe (PFX)
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'pfx'
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE || secrets.WIN_CERTIFICATE_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD || secrets.WIN_CERTIFICATE_PASSWORD }}
+        run: powershell -ExecutionPolicy Bypass -File scripts\sign-windows.ps1 -Exe build\bin\Dlyven.exe
+      - name: Sign app exe (Azure Artifact Signing)
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'azure'
+        uses: azure/artifact-signing-action@b443cf8ea4124818d2ea9f043cba29fc3ec47b16 # v1.2.0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ secrets.AZURE_SIGNING_ACCOUNT_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_SIGNING_CERTIFICATE_PROFILE }}
+          files: ${{ github.workspace }}\build\bin\Dlyven.exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+          description: Dlyven
+      - name: Upload app exe for SignPath
+        id: signpath-app
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'signpath'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: signpath-unsigned-app
+          path: build/bin/Dlyven.exe
+          retention-days: 1
+      - name: Sign app exe (SignPath)
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'signpath'
+        uses: signpath/github-action-submit-signing-request@c92b958760219087e01f8d67a1669ed57afe2627 # v2.3
+        with:
+          connector-url: https://githubactions.signpath.io
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ secrets.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ secrets.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.signpath-app.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: build/signpath/app
+      - name: Use SignPath-signed app exe
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'signpath'
+        shell: pwsh
+        run: Copy-Item build\signpath\app\Dlyven.exe build\bin\Dlyven.exe -Force
+
+      - name: Repack installer with signed exe
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign != 'none'
+        shell: pwsh
+        run: powershell -ExecutionPolicy Bypass -File scripts\package-nsis.ps1 -Exe build\bin\Dlyven.exe
+
+      - name: Sign installer (PFX)
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'pfx'
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE || secrets.WIN_CERTIFICATE_PFX }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD || secrets.WIN_CERTIFICATE_PASSWORD }}
+        run: powershell -ExecutionPolicy Bypass -File scripts\sign-windows.ps1 -Exe build\bin\Dlyven-amd64-installer.exe
+      - name: Sign installer (Azure Artifact Signing)
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'azure'
+        uses: azure/artifact-signing-action@b443cf8ea4124818d2ea9f043cba29fc3ec47b16 # v1.2.0
+        with:
+          azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          endpoint: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ secrets.AZURE_SIGNING_ACCOUNT_NAME }}
+          certificate-profile-name: ${{ secrets.AZURE_SIGNING_CERTIFICATE_PROFILE }}
+          files: ${{ github.workspace }}\build\bin\Dlyven-amd64-installer.exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+          description: Dlyven Setup
+      - name: Upload installer for SignPath
+        id: signpath-installer
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'signpath'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: signpath-unsigned-installer
+          path: build/bin/Dlyven-amd64-installer.exe
+          retention-days: 1
+      - name: Sign installer (SignPath)
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'signpath'
+        uses: signpath/github-action-submit-signing-request@c92b958760219087e01f8d67a1669ed57afe2627 # v2.3
+        with:
+          connector-url: https://githubactions.signpath.io
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ secrets.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ secrets.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ secrets.SIGNPATH_SIGNING_POLICY_SLUG }}
+          artifact-configuration-slug: ${{ secrets.SIGNPATH_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.signpath-installer.outputs.artifact-id }}
+          wait-for-completion: true
+          output-artifact-directory: build/signpath/installer
+      - name: Use SignPath-signed installer
+        if: runner.os == 'Windows' && steps.signing.outputs.windows_sign == 'signpath'
+        shell: pwsh
+        run: Copy-Item build\signpath\installer\Dlyven-amd64-installer.exe build\bin\Dlyven-amd64-installer.exe -Force
+
+      - name: Verify Windows signatures
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          METHOD: ${{ steps.signing.outputs.windows_sign }}
+        run: |
+          $files = 'build\bin\Dlyven.exe', 'build\bin\Dlyven-amd64-installer.exe'
+          if ($env:METHOD -eq 'none') {
+            $msg = 'Windows build is UNSIGNED (no signing secrets). SmartScreen will show "Windows protected your PC".'
+            Write-Host "::warning::$msg"
+            Add-Content $env:GITHUB_STEP_SUMMARY "- Windows: $msg"
+            exit 0
+          }
+          foreach ($f in $files) {
+            $sig = Get-AuthenticodeSignature $f
+            Write-Host "$f : $($sig.Status) | signer: $($sig.SignerCertificate.Subject) | timestamp: $($sig.TimeStamperCertificate.Subject)"
+            if ($sig.Status -ne 'Valid') { throw "$f signature is $($sig.Status)" }
+            if (-not $sig.TimeStamperCertificate) { throw "$f has no timestamp" }
+          }
+          Add-Content $env:GITHUB_STEP_SUMMARY "- Windows: app exe and installer Authenticode-signed via $env:METHOD (timestamped)."
+
+      # ------------------------------------------------------------------ macOS
+      - name: Import Apple Developer ID
+        if: runner.os == 'macOS' && steps.signing.outputs.apple_sign == 'true'
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE || secrets.MACOS_CERTIFICATE_P12 }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD || secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: bash .github/scripts/macos-keychain.sh import
       - name: Build macOS
         if: runner.os == 'macOS'
         env:
           VERSION: ${{ steps.ver.outputs.version }}
+          # Empty → sign-macos.sh picks the imported identity, or ad-hoc signs without one.
+          APPLE_SIGNING_IDENTITY: ${{ steps.signing.outputs.apple_sign == 'true' && (secrets.APPLE_SIGNING_IDENTITY || secrets.APPLE_SIGN_IDENTITY) || '' }}
+        run: ./scripts/build.sh darwin
+      - name: Package macOS dmg
+        if: runner.os == 'macOS'
+        run: ./scripts/package-macos.sh build/bin/Dlyven.app build/bin/Dlyven.dmg
+      - name: Notarize macOS
+        if: runner.os == 'macOS' && steps.signing.outputs.apple_notary != 'none'
+        env:
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
           APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-        run: ./scripts/build.sh darwin
+        # Submitting the dmg notarizes the app inside it; staple both (the .zip ships the app).
+        run: ./scripts/notarize-macos.sh build/bin/Dlyven.dmg build/bin/Dlyven.app
+      - name: Verify macOS signature
+        if: runner.os == 'macOS'
+        env:
+          APPLE_SIGN: ${{ steps.signing.outputs.apple_sign }}
+          APPLE_NOTARY: ${{ steps.signing.outputs.apple_notary }}
+        run: |
+          codesign --verify --deep --strict --verbose=2 build/bin/Dlyven.app
+          codesign -dv --verbose=2 build/bin/Dlyven.app 2>&1 | grep -E '^(Identifier|Authority|TeamIdentifier|Signature|Timestamp|Runtime|CodeDirectory)' || true
+          if [ "$APPLE_SIGN" != true ]; then
+            msg="macOS build is only AD-HOC signed: not Developer ID signed, not notarized. Gatekeeper will ask users to confirm the first launch."
+          elif [ "$APPLE_NOTARY" = none ]; then
+            msg="macOS build is Developer ID signed but NOT notarized (no notarization secrets). Gatekeeper will still warn."
+          else
+            spctl -a -vvv -t exec build/bin/Dlyven.app
+            spctl -a -vvv -t open --context context:primary-signature build/bin/Dlyven.dmg
+            echo "- macOS: Developer ID signed, notarized ($APPLE_NOTARY) and stapled (.app and .dmg)." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "::warning::$msg"
+          echo "- macOS: $msg" >> "$GITHUB_STEP_SUMMARY"
+      - name: Delete temporary keychain
+        if: always() && runner.os == 'macOS' && steps.signing.outputs.apple_sign == 'true'
+        run: bash .github/scripts/macos-keychain.sh cleanup
+
+      # ------------------------------------------------------------------ Linux
       - name: Build Linux
         if: runner.os == 'Linux'
         env:
           VERSION: ${{ steps.ver.outputs.version }}
         run: ./scripts/build.sh linux
+
       - name: Package
         shell: bash
         run: |
@@ -145,9 +354,12 @@ jobs:
           case "${{ matrix.name }}" in
             windows-amd64)
               cp build/bin/Dlyven.exe dist/${{ matrix.artifact }}
+              cp build/bin/Dlyven-amd64-installer.exe dist/${{ matrix.installer }}
               ;;
             macos-universal)
-              (cd build/bin && zip -r "$GITHUB_WORKSPACE/dist/${{ matrix.artifact }}" Dlyven.app)
+              # ditto keeps the code signature and stapled ticket intact.
+              ditto -c -k --keepParent build/bin/Dlyven.app "dist/${{ matrix.artifact }}"
+              cp build/bin/Dlyven.dmg dist/${{ matrix.installer }}
               ;;
             linux-amd64|linux-arm64)
               cp build/bin/Dlyven dist/${{ matrix.artifact }}
@@ -158,12 +370,14 @@ jobs:
           command -v python3 >/dev/null 2>&1 || PY=python
           "$PY" - <<'PY'
           import hashlib, pathlib
-          p = pathlib.Path("dist") / "${{ matrix.artifact }}"
-          digest = hashlib.sha256(p.read_bytes()).hexdigest()
-          (p.parent / f"{p.name}.sha256").write_text(f"{digest}  {p.name}\n")
-          print(f"{digest}  {p.name}")
+          for p in sorted(pathlib.Path("dist").iterdir()):
+              if p.suffix == ".sha256":
+                  continue
+              digest = hashlib.sha256(p.read_bytes()).hexdigest()
+              (p.parent / f"{p.name}.sha256").write_text(f"{digest}  {p.name}\n")
+              print(f"{digest}  {p.name}")
           PY
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: ${{ matrix.name }}
           path: dist/*
@@ -172,9 +386,12 @@ jobs:
     name: GitHub Release
     needs: [decide, build]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     if: |
       always() &&
       !cancelled() &&
+      github.event_name != 'pull_request' &&
       needs.build.result != 'cancelled' &&
       needs.build.result != 'skipped' &&
       (
@@ -182,19 +399,31 @@ jobs:
         (needs.decide.result == 'success' && needs.decide.outputs.should == 'true')
       )
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0
           fetch-tags: true
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           path: dist
+          # Only the per-OS build artifacts, not the SignPath staging uploads.
+          pattern: "{windows,macos,linux}-*"
           merge-multiple: true
       - name: Combined checksums
         run: |
           cd dist
           cat *.sha256 | sort > SHA256SUMS.txt
           cat SHA256SUMS.txt
+      - name: Sign checksums (GPG)
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          if [ -z "$GPG_PRIVATE_KEY" ] || [ -z "$GPG_PASSPHRASE" ]; then
+            echo "No GPG_PRIVATE_KEY / GPG_PASSPHRASE: SHA256SUMS.txt is published without a .asc signature."
+            exit 0
+          fi
+          bash .github/scripts/gpg-sign.sh dist/SHA256SUMS.txt
       - name: Tag
         if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
         env:
@@ -207,7 +436,7 @@ jobs:
             git tag "v${VERSION}" "${GITHUB_SHA}"
             git push origin "v${VERSION}"
           fi
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref_name || format('v{0}', needs.decide.outputs.version) }}
           generate_release_notes: true

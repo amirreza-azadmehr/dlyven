@@ -1,18 +1,23 @@
 #!/usr/bin/env bash
-# Sign + notarize + staple Dlyven.app so Gatekeeper lets it open.
+# Code-sign Dlyven.app. Must run after every step that touches the bundle
+# (lipo, icon copies, Info.plist edits) since any change breaks the signature.
 #
-# Needs a paid Apple Developer ID Application certificate. Secrets (CI) or env:
-#   APPLE_SIGN_IDENTITY   e.g. "Developer ID Application: Name (TEAMID)"
-#   APPLE_API_KEY         contents of AuthKey_XXXXXX.p8
-#   APPLE_API_KEY_ID
-#   APPLE_API_ISSUER      App Store Connect issuer UUID
-#   APPLE_TEAM_ID
+#   ./scripts/sign-macos.sh [build/bin/Dlyven.app]
+#
+# With a Developer ID Application identity (APPLE_SIGNING_IDENTITY, or the first
+# one found in the keychain): nested code first, then the app, with hardened
+# runtime + secure timestamp + build/darwin/entitlements.plist. That is what
+# notarization requires; run scripts/notarize-macos.sh afterwards.
+#
+# Without one: ad-hoc signature only. That stops Apple silicon calling the app
+# "damaged", but it is NOT a trusted or notarized signature — Gatekeeper will
+# still ask the user to confirm the first launch.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
 APP="${1:-build/bin/Dlyven.app}"
 ENTITLEMENTS="build/darwin/entitlements.plist"
-IDENTITY="${APPLE_SIGN_IDENTITY:-}"
+IDENTITY="${APPLE_SIGNING_IDENTITY:-${APPLE_SIGN_IDENTITY:-}}"
 
 if [[ ! -d "$APP" ]]; then
   echo "no app bundle at $APP" >&2
@@ -24,36 +29,28 @@ if [[ -z "$IDENTITY" ]]; then
 fi
 
 if [[ -z "$IDENTITY" ]]; then
-  echo "No Developer ID certificate — Gatekeeper will still block downloaded copies."
-  echo "Add MACOS_CERTIFICATE_P12 + Apple notary secrets on GitHub, then cut a new release."
+  echo "→ no Developer ID identity: ad-hoc signing $APP"
+  codesign --force --deep --sign - "$APP"
+  codesign --verify --deep --strict --verbose=2 "$APP"
+  msg="macOS build is only AD-HOC signed (not Developer ID, not notarized). Users must confirm the first launch; see README → Installation and security warnings."
+  if [[ -n "${GITHUB_ACTIONS:-}" ]]; then echo "::warning::$msg"; else echo "⚠ $msg"; fi
   exit 0
 fi
 
 echo "→ codesign as $IDENTITY"
-codesign --force --deep --strict --timestamp --options runtime \
-  --entitlements "$ENTITLEMENTS" \
-  --sign "$IDENTITY" \
-  "$APP"
+MAIN="$APP/Contents/MacOS/$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$APP/Contents/Info.plist")"
+SIGN=(codesign --force --options runtime --timestamp --sign "$IDENTITY")
+
+# Inside-out: find -depth lists children before their parent bundle.
+while IFS= read -r -d '' item; do
+  if [[ -d "$item" ]]; then
+    "${SIGN[@]}" "$item"
+  elif [[ "$item" != "$MAIN" ]] && file -b "$item" | grep -q 'Mach-O'; then
+    "${SIGN[@]}" "$item"
+  fi
+done < <(find "$APP/Contents" -depth -mindepth 1 -not -path '*/_CodeSignature/*' \
+  \( -type f -o -type d \( -name '*.framework' -o -name '*.app' -o -name '*.xpc' -o -name '*.appex' -o -name '*.bundle' \) \) -print0)
+
+"${SIGN[@]}" --entitlements "$ENTITLEMENTS" "$APP"
 codesign --verify --deep --strict --verbose=2 "$APP"
-
-if [[ -z "${APPLE_API_KEY:-}" || -z "${APPLE_API_KEY_ID:-}" || -z "${APPLE_API_ISSUER:-}" ]]; then
-  echo "Signed, but not notarized (missing APPLE_API_KEY / KEY_ID / ISSUER)."
-  echo "Apple will still warn until notarization lands."
-  exit 0
-fi
-
-KEYFILE="$(mktemp)"
-trap 'rm -f "$KEYFILE" "${APP}.notarize.zip"' EXIT
-printf '%s' "$APPLE_API_KEY" > "$KEYFILE"
-
-echo "→ notarize"
-ditto -c -k --keepParent "$APP" "${APP}.notarize.zip"
-xcrun notarytool submit "${APP}.notarize.zip" \
-  --key "$KEYFILE" \
-  --key-id "$APPLE_API_KEY_ID" \
-  --issuer "$APPLE_API_ISSUER" \
-  ${APPLE_TEAM_ID:+--team-id "$APPLE_TEAM_ID"} \
-  --wait
-xcrun stapler staple "$APP"
-spctl --assess --type execute --verbose "$APP" || true
-echo "✓ signed, notarized, stapled: $APP"
+echo "✓ Developer ID signed: $APP (not notarized yet)"

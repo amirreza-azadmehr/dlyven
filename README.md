@@ -56,17 +56,47 @@ UI talks **English, فارسی, Türkçe, کوردی (سۆرانی)** and flips 
 
 | Your computer | File |
 | --- | --- |
-| Windows | `Dlyven-windows-amd64.exe` |
-| Mac (Intel or Apple silicon) | `Dlyven-macos-universal.zip` |
+| Windows (portable, no install) | `Dlyven-windows-amd64.exe` |
+| Windows (installer) | `Dlyven-windows-amd64-installer.exe` |
+| Mac (Intel or Apple silicon) | `Dlyven-macos-universal.dmg` or `Dlyven-macos-universal.zip` |
 | Linux x64 | `Dlyven-linux-amd64` |
 | Linux ARM | `Dlyven-linux-arm64` |
 
-3. Open it. Windows: double-click the `.exe`. Linux: `chmod +x Dlyven-linux-*` then run it. Mac: unzip and open `Dlyven.app`.
+3. Open it. Windows: double-click the `.exe`. Linux: `chmod +x Dlyven-linux-*` then run it. Mac: open the `.dmg` and drag `Dlyven.app` to Applications (or unzip the `.zip`).
 4. First launch needs internet — it grabs yt-dlp and ffmpeg by itself. After that, paste a link and download.
 
-That’s it. No installer, no extra programs.
+That’s it. No extra programs. If your OS shows a warning on first launch, see below.
 
-Official GitHub builds are meant to be **signed** (Apple notarized on Mac, Authenticode on Windows) so Gatekeeper / SmartScreen stay quiet. That only happens after the signing certs are in the repo secrets — until then macOS may still say it “could not verify” the app.
+### Installation and security warnings
+
+Whether a release is signed depends on which signing certificates the maintainer has configured ([SIGNING.md](SIGNING.md)). Each release’s build log says exactly what was done. When a step was skipped, the log shows a warning saying so.
+
+**macOS**
+
+- *Signed + notarized build:* opens normally. macOS may ask “Dlyven is an app downloaded from the Internet. Are you sure you want to open it?”. Click **Open**.
+- *Ad-hoc signed build (no Apple Developer ID):* this is **not** notarized, and Apple has not checked it. macOS will say it “cannot verify” Dlyven or that Apple “could not verify it is free of malware”. To open it anyway:
+  - macOS 14 and earlier: in Finder, **right-click** (or Control-click) `Dlyven.app` → **Open** → **Open**.
+  - macOS 15 and later: try to open the app once, close the dialog, then go to **System Settings → Privacy & Security**, scroll down to the message about Dlyven, and click **Open Anyway**. Confirm with your password.
+  - If macOS says **“Dlyven is damaged and can’t be opened”**, move the app to Applications and run this in Terminal:
+    ```bash
+    xattr -dr com.apple.quarantine /Applications/Dlyven.app
+    ```
+    This removes the “downloaded from the internet” flag from this one app only. Do it only for a copy you downloaded from this repository’s Releases page.
+
+**Windows**
+
+- *Unsigned build:* SmartScreen shows **“Windows protected your PC”**. Click **More info** → **Run anyway**. Your browser may also warn that the file “isn’t commonly downloaded”. Choose **Keep**.
+- *Signed build:* the publisher name shows in the UAC/properties dialog. SmartScreen can still warn for a while after a new certificate or release, until Microsoft has seen enough downloads to build reputation. Use the same **More info → Run anyway** steps.
+
+**Linux**
+
+Linux doesn’t block downloaded programs, so you just need `chmod +x Dlyven-linux-*`. To check your download, compare it with `SHA256SUMS.txt` from the release:
+
+```bash
+sha256sum -c SHA256SUMS.txt --ignore-missing
+# If the release also has SHA256SUMS.txt.asc (GPG-signed):
+gpg --verify SHA256SUMS.txt.asc SHA256SUMS.txt
+```
 
 ## What it does
 
@@ -210,7 +240,7 @@ wails build -clean -trimpath
 # Windows:                wails build -trimpath -platform windows/amd64 -webview2 embed
 ```
 
-Release builds sign when GitHub secrets are present (`MACOS_CERTIFICATE_P12`, `APPLE_API_KEY` / `APPLE_API_KEY_ID` / `APPLE_API_ISSUER`, `WIN_CERTIFICATE_PFX`). Without those, Apple Gatekeeper and Windows SmartScreen will warn.
+Release builds sign when GitHub secrets are present. See [SIGNING.md](SIGNING.md) for the secret names and setup. Without them, macOS builds are only ad-hoc signed and Windows builds are unsigned, so Gatekeeper and SmartScreen will warn (see [Installation and security warnings](#installation-and-security-warnings)).
 
 ## Testing
 
@@ -239,6 +269,8 @@ npm run fonts:check                         # bundled fonts contain every Sorani
 ├── build/appicon.png           # App icon (Wails generates .ico/.icns from it)
 ├── scripts/build.sh            # macOS / Linux builds
 ├── scripts/build.ps1           # Windows builds (+ optional NSIS installer)
+├── scripts/sign-*.{sh,ps1}     # Code signing (see SIGNING.md)
+├── scripts/package-*, notarize-macos.sh  # .dmg / NSIS packaging, Apple notarization
 ├── internal/
 │   ├── appinfo/                # Name, ID, version, data dir: rename the app here
 │   ├── errs/                   # Stable error codes + yt-dlp output classifier
