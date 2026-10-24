@@ -14,7 +14,7 @@ $ErrorActionPreference = 'Stop'
 Set-Location (Join-Path $PSScriptRoot '..')
 
 if (-not (Get-Command wails -ErrorAction SilentlyContinue)) {
-  throw 'wails CLI not found. Install it with: go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2'
+  throw 'wails CLI not found. Install it with: go install github.com/wailsapp/wails/v2/cmd/wails@v2.12.0'
 }
 if (-not $Version) { $Version = (Get-Content wails.json -Raw | ConvertFrom-Json).info.productVersion }
 $ldflags = "-s -w -X github.com/amirreza-azadmehr/dlyven/internal/appinfo.Version=$Version"

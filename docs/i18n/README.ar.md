@@ -44,20 +44,23 @@
 
 ## التثبيت
 
-1. افتح [آخر إصدار](https://github.com/amirreza-azadmehr/dlyven/releases/latest).
-2. نزّل **ملف واحد**:
+نزّل **ملف واحد** (الروابط دايمًا لآخر إصدار):
 
-| جهازك | الملف |
+| جهازك | التنزيل |
 | --- | --- |
-| ويندوز | `Dlyven-windows-amd64.exe` |
-| ماك (إنتل أو Apple silicon) | `Dlyven-macos-universal.zip` |
-| لينكس x64 | `Dlyven-linux-amd64` |
-| لينكس ARM | `Dlyven-linux-arm64` |
+| ويندوز 10 / 11، مثبّت (مستحسن) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| ويندوز 10 / 11، نسخة محمولة (بدون تثبيت) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| ماك (Apple silicon أو إنتل) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| لينكس x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| لينكس ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. افتحه. ويندوز: دبل كلك على `.exe`. لينكس: `chmod +x Dlyven-linux-*` بعدين شغّله. ماك: فك الضغط وافتح `Dlyven.app`.
-4. أول مرة يحتاج نت — يجيب yt-dlp وffmpeg لحاله. بعدين لزّق الرابط ونزّل.
+بعدها: ويندوز: شغّل الـSetup، أو دبل كلك على الـ`.exe` المحمول. ماك: افتح الـ`.dmg` واسحب Dlyven على Applications. لينكس: `chmod +x Dlyven-Linux-*` بعدين شغّله (يحتاج WebKitGTK 4.1: أوبونتو 22.04+ / ديبيان 12+).
 
-بدون مثبّت. النسخ الرسمية تنوقع لما شهادات أبل / ويندوز تكون موجودة. من السورس؟ [README المطوّر](../../README.md).
+أول مرة يحتاج نت — يجيب yt-dlp وffmpeg لحاله. بعدين لزّق الرابط ونزّل.
+
+**التحديثات:** لما ينزل إصدار جديد، Dlyven يخبرك. **Settings → Updates → Update now**. بدون إعادة تثبيت.
+
+تحذير أمان أول تشغيل؟ [شوف هنا](../../README.md#installation-and-security-warnings). من السورس؟ [README المطوّر](../../README.md).
 
 ## طريقة الاستخدام
 
@@ -86,7 +89,7 @@
 
 **أغاني مباشرة من سبوتيفاي؟** لا. بس نطابق تسجيل عام.
 
-**يرسل تقارير؟** لا.
+**يرسل تقارير؟** لا. ما فيه أي تتبّع؛ بس يتصل بـGitHub عشان يجيب أدواته ويشيك على التحديثات (تقدر توقف الفحص التلقائي من الإعدادات).
 
 **وين بياناتي؟** ويندوز `%AppData%\Dlyven` · ماك `~/Library/Application Support/Dlyven` · لينكس `~/.config/Dlyven`.
 

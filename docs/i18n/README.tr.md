@@ -44,20 +44,23 @@ Masaüstü, açık kaynak, Windows / macOS / Linux. Altında [yt-dlp](https://gi
 
 ## Kurulum
 
-1. [Son sürüme](https://github.com/amirreza-azadmehr/dlyven/releases/latest) gir.
-2. **Tek** dosya indir:
+**Tek** dosya indir (linkler hep en son sürümü verir):
 
-| Bilgisayarın | Dosya |
+| Bilgisayarın | İndir |
 | --- | --- |
-| Windows | `Dlyven-windows-amd64.exe` |
-| Mac (Intel veya Apple silicon) | `Dlyven-macos-universal.zip` |
-| Linux x64 | `Dlyven-linux-amd64` |
-| Linux ARM | `Dlyven-linux-arm64` |
+| Windows 10 / 11, kurulum (önerilen) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| Windows 10 / 11, taşınabilir (kurulumsuz) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| Mac (Apple silicon veya Intel) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| Linux x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| Linux ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. Aç. Windows: `.exe`ye çift tık. Linux: önce `chmod +x Dlyven-linux-*` sonra çalıştır. Mac: zip’ten çıkar, `Dlyven.app` aç.
-4. İlk açılışta internet lazım — yt-dlp ve ffmpeg’i kendi çekiyor. Sonra link yapıştır, indir.
+Sonra: Windows: Setup’ı çalıştır ya da taşınabilir `.exe`ye çift tıkla. Mac: `.dmg`yi aç, Dlyven’i Applications’a sürükle. Linux: önce `chmod +x Dlyven-Linux-*` sonra çalıştır (WebKitGTK 4.1 gerekir: Ubuntu 22.04+ / Debian 12+).
 
-Kurulum yok. Resmi sürümler Apple / Windows sertifikası olunca imzalanır. Kaynaktan mı? [geliştirici README](../../README.md).
+İlk açılışta internet lazım — yt-dlp ve ffmpeg’i kendi çekiyor. Sonra link yapıştır, indir.
+
+**Güncellemeler:** yeni sürüm çıkınca Dlyven haber veriyor. **Ayarlar → Güncellemeler → Şimdi güncelle**. Yeniden kurmak yok.
+
+İlk açılışta güvenlik uyarısı mı? [Şuraya bak](../../README.md#installation-and-security-warnings). Kaynaktan mı? [geliştirici README](../../README.md).
 
 ## Nasıl kullanılır
 
@@ -86,7 +89,7 @@ YouTube, Instagram, TikTok, Spotify, X, Facebook, Vimeo, SoundCloud, Reddit, Twi
 
 **Şarkıyı direkt Spotify’dan mı çekiyor?** Hayır. Sadece herkese açık bir kaydı eşliyor.
 
-**Eve haber mi gidiyor?** Hayır.
+**Eve haber mi gidiyor?** Hayır. Telemetri yok; sadece araçlarını indirmek ve güncelleme kontrolü için GitHub’a bağlanıyor (otomatik kontrol Ayarlar’dan kapatılabilir).
 
 **Dosyalarım nerede?** Windows `%AppData%\Dlyven` · Mac `~/Library/Application Support/Dlyven` · Linux `~/.config/Dlyven`.
 

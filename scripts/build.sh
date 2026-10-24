@@ -15,7 +15,7 @@ VERSION="${VERSION:-$(grep -o '"productVersion": *"[^"]*"' wails.json | cut -d'"
 LDFLAGS="-s -w -X github.com/amirreza-azadmehr/dlyven/internal/appinfo.Version=${VERSION}"
 TARGET="${1:-$(uname -s | tr '[:upper:]' '[:lower:]')}"
 
-command -v wails >/dev/null || { echo "wails CLI not found: go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2"; exit 1; }
+command -v wails >/dev/null || { echo "wails CLI not found: go install github.com/wailsapp/wails/v2/cmd/wails@v2.12.0"; exit 1; }
 
 ensure_mingw() {
   if command -v x86_64-w64-mingw32-gcc >/dev/null; then

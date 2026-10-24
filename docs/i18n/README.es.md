@@ -44,20 +44,23 @@ Escritorio, código abierto, Windows / macOS / Linux. Por debajo va [yt-dlp](htt
 
 ## Instalar
 
-1. Abre la [última versión](https://github.com/amirreza-azadmehr/dlyven/releases/latest).
-2. Baja **un** archivo:
+Baja **un** archivo (los enlaces siempre apuntan a la última versión):
 
-| Tu PC | Archivo |
+| Tu PC | Descarga |
 | --- | --- |
-| Windows | `Dlyven-windows-amd64.exe` |
-| Mac (Intel o Apple silicon) | `Dlyven-macos-universal.zip` |
-| Linux x64 | `Dlyven-linux-amd64` |
-| Linux ARM | `Dlyven-linux-arm64` |
+| Windows 10 / 11, instalador (recomendado) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| Windows 10 / 11, portable (sin instalar) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| Mac (Apple silicon o Intel) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| Linux x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| Linux ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. Ábrelo. Windows: doble clic al `.exe`. Linux: `chmod +x Dlyven-linux-*` y listo. Mac: descomprime y abre `Dlyven.app`.
-4. La primera vez necesita internet — se baja yt-dlp y ffmpeg solito. Después pegas un enlace y ya.
+Luego: Windows: ejecuta el Setup o haz doble clic en el `.exe` portable. Mac: abre el `.dmg` y arrastra Dlyven a Applications. Linux: `chmod +x Dlyven-Linux-*` y listo (necesita WebKitGTK 4.1: Ubuntu 22.04+ / Debian 12+).
 
-Sin instalador. Las builds oficiales se firman cuando hay certificados de Apple / Windows. ¿Desde el código? [README de desarrollo](../../README.md).
+La primera vez necesita internet — se baja yt-dlp y ffmpeg solito. Después pegas un enlace y ya.
+
+**Actualizaciones:** cuando sale una versión nueva, Dlyven te avisa. **Settings → Updates → Update now**. Sin reinstalar.
+
+¿Aviso de seguridad al abrirla por primera vez? [Mira aquí](../../README.md#installation-and-security-warnings). ¿Desde el código? [README de desarrollo](../../README.md).
 
 ## Cómo se usa
 
@@ -86,7 +89,7 @@ YouTube, Instagram, TikTok, Spotify, X, Facebook, Vimeo, SoundCloud, Reddit, Twi
 
 **¿Bajo canciones directo de Spotify?** No. Solo emparejamos una grabación pública.
 
-**¿Manda telemetría?** No.
+**¿Manda telemetría?** No. Solo habla con GitHub para bajar sus herramientas y buscar actualizaciones (la comprobación automática se apaga en Settings).
 
 **¿Dónde está mi data?** Windows `%AppData%\Dlyven` · Mac `~/Library/Application Support/Dlyven` · Linux `~/.config/Dlyven`.
 
