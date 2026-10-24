@@ -51,21 +51,42 @@ UI talks **English, فارسی, Türkçe, کوردی (سۆرانی)** and flips 
 
 ## Install
 
-1. Open the [latest release](https://github.com/amirreza-azadmehr/dlyven/releases/latest).
-2. Download **one** file:
+Download **one** file. These links always point to the newest release:
 
-| Your computer | File |
+| Your computer | Download |
 | --- | --- |
-| Windows (portable, no install) | `Dlyven-windows-amd64.exe` |
-| Windows (installer) | `Dlyven-windows-amd64-installer.exe` |
-| Mac (Intel or Apple silicon) | `Dlyven-macos-universal.dmg` or `Dlyven-macos-universal.zip` |
-| Linux x64 | `Dlyven-linux-amd64` |
-| Linux ARM | `Dlyven-linux-arm64` |
+| **Windows** 10 / 11 (64-bit), installer, recommended | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| **Windows** 10 / 11 (64-bit), portable, no install | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| **macOS** 11+ (Apple Silicon and Intel) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| **Linux** x64 (most PCs) | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| **Linux** ARM64 (Raspberry Pi 4/5 with a 64-bit OS, ARM laptops) | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. Open it. Windows: double-click the `.exe`. Linux: `chmod +x Dlyven-linux-*` then run it. Mac: open the `.dmg` and drag `Dlyven.app` to Applications (or unzip the `.zip`).
-4. First launch needs internet — it grabs yt-dlp and ffmpeg by itself. After that, paste a link and download.
+Each [release](https://github.com/amirreza-azadmehr/dlyven/releases/latest) also has `Dlyven-macOS-Universal.zip` (the same Mac app, zipped) and `SHA256SUMS.txt`.
 
-That’s it. No extra programs. If your OS shows a warning on first launch, see below.
+Then:
+
+- **Windows:** run the Setup, or double-click the portable `.exe`.
+- **macOS:** open the `.dmg`. In the window that appears, drag **Dlyven** onto **Applications**, then start it from Applications. (It also runs straight from the disk image, but it can’t update itself from there.)
+- **Linux:** `chmod +x Dlyven-Linux-*`, then run it. It needs WebKitGTK 4.1, which most desktops already have. If not: `sudo apt install libwebkit2gtk-4.1-0` (Ubuntu 22.04+, Debian 12+), `sudo dnf install webkit2gtk4.1` (Fedora), `sudo pacman -S webkit2gtk-4.1` (Arch). Older distros (glibc below 2.34) can’t run the release binary; build from source instead.
+
+First launch needs internet: it grabs yt-dlp, ffmpeg and Deno by itself. After that, paste a link and download.
+
+That’s it. No extra programs. If your OS shows a warning on first launch, see [below](#installation-and-security-warnings).
+
+### Updating
+
+Dlyven looks for a new version on GitHub when it starts. When one is out, you get a notice and **Settings → Updates → Update now** does the rest: it downloads the release for your system, checks it against the release’s `SHA256SUMS.txt`, installs it, and restarts. Settings, history and the download queue stay as they are. No reinstall.
+
+| Your copy | What “Update now” does |
+| --- | --- |
+| Windows, installed with Setup | Runs the new Setup silently. Windows asks for permission once. |
+| Windows portable | Replaces the `.exe` in place |
+| macOS | Replaces `Dlyven.app` in place, so keep it in Applications (or another folder you can write to) |
+| Linux | Replaces the binary in place |
+
+If Dlyven can’t replace itself (a read-only folder, running from the `.dmg`, a copy managed by a package manager), the button becomes **Download from GitHub** instead. Turn off the startup check in **Settings → Updates**. Nothing is downloaded until you click.
+
+On a version without **Settings → Updates**? Download the latest release once by hand; from then on it updates itself.
 
 ### Installation and security warnings
 
@@ -90,7 +111,7 @@ Whether a release is signed depends on which signing certificates the maintainer
 
 **Linux**
 
-Linux doesn’t block downloaded programs, so you just need `chmod +x Dlyven-linux-*`. To check your download, compare it with `SHA256SUMS.txt` from the release:
+Linux doesn’t block downloaded programs, so you just need `chmod +x Dlyven-Linux-*`. To check your download, compare it with `SHA256SUMS.txt` from the release:
 
 ```bash
 sha256sum -c SHA256SUMS.txt --ignore-missing
@@ -132,14 +153,17 @@ Nope. Just a desktop UI on top of yt-dlp.
 No. We only match a public recording and tag it.
 
 **Does it phone home?**  
-No.
+No telemetry, no accounts. Besides the sites you download from, it only talks to GitHub (and, on macOS, ffmpeg.martin-riedl.de) to install and update yt-dlp, ffmpeg and Deno, and to check for new Dlyven versions. Both automatic checks can be turned off in Settings.
+
+**How do I update?**  
+It tells you when a new version is out. Click **Update now** in Settings → Updates. See [Updating](#updating).
 
 **Where’s my stuff?**  
 Windows `%AppData%\Dlyven` · Mac `~/Library/Application Support/Dlyven` · Linux `~/.config/Dlyven`.
 
 ## Roadmap
 
-- Apple notarization + Windows Authenticode once cert secrets are set
+- Apple notarization + Windows Authenticode once cert secrets are set (until then, a self-update installs the same unsigned/ad-hoc build you’d download by hand)
 - More UI languages
 - Optional tray / start-on-login
 - Better playlist UX for very large lists
@@ -152,7 +176,7 @@ Ideas: [GitHub Issues](https://github.com/amirreza-azadmehr/dlyven/issues).
 | --- | --- |
 | Go | 1.25+ |
 | Node.js | 20+ (npm 10+) |
-| Wails CLI | v2.10.2: `go install github.com/wailsapp/wails/v2/cmd/wails@v2.10.2` |
+| Wails CLI | v2.12.0: `go install github.com/wailsapp/wails/v2/cmd/wails@v2.12.0` |
 
 Platform prerequisites (run `wails doctor` to verify):
 
@@ -165,6 +189,8 @@ You don’t need yt-dlp or ffmpeg installed first. Dlyven grabs them on first la
 ## Development
 
 Push real app changes to `main` and GitHub tags the next patch, builds Windows/macOS/Linux, and writes the release notes from the commits. Docs-only pushes skip that. Put `[skip release]` on a commit if you don’t want a build.
+
+Release files keep the same names in every release (no version number), so the download links above and the in-app updater always find them. The names live in `.github/workflows/release.yml` and `internal/updater/target.go`, and `go test ./internal/updater` fails if those two disagree. Each release starts with a download table (`.github/scripts/release-notes.sh`), followed by GitHub’s generated changelog.
 
 ```bash
 cd frontend && npm install && cd ..
@@ -230,7 +256,11 @@ Must run **on macOS**. Wails cannot cross-compile to Darwin from Linux or Window
 ```bash
 ./scripts/build.sh darwin
 # → build/bin/Dlyven.app
+./scripts/package-macos.sh
+# → build/bin/Dlyven.dmg
 ```
+
+With [dmgbuild](https://github.com/dmgbuild/dmgbuild) installed (`python3 -m pip install dmgbuild`), the `.dmg` opens as the drag-to-Applications window: Dlyven, an arrow, Applications. The layout is in `build/darwin/dmg-settings.py`, and the background comes from `build/darwin/dmg-background.html`. Without dmgbuild you get a plain window with the same two items.
 
 ### Wails directly
 
@@ -267,6 +297,7 @@ npm run fonts:check                         # bundled fonts contain every Sorani
 ├── app.go                      # Methods bound to the frontend (window.go.main.App.*)
 ├── wails.json
 ├── build/appicon.png           # App icon (Wails generates .ico/.icns from it)
+├── build/darwin/dmg-*          # .dmg window layout (dmgbuild) and its background
 ├── scripts/build.sh            # macOS / Linux builds
 ├── scripts/build.ps1           # Windows builds (+ optional NSIS installer)
 ├── scripts/sign-*.{sh,ps1}     # Code signing (see SIGNING.md)
@@ -284,6 +315,7 @@ npm run fonts:check                         # bundled fonts contain every Sorani
 │   ├── filename/               # Template rendering, Unicode-safe sanitizing, unique names
 │   ├── logx/                   # JSON logging to a size-rotated file
 │   ├── sysutil/                # Hidden subprocesses, process-tree kill, reveal in folder, notify
+│   ├── updater/                # Dlyven's own updates: check GitHub, verify, swap in, relaunch
 │   └── smoke/                  # Opt-in end-to-end tests (build tag: smoke)
 └── frontend/
     ├── index.html, vite.config.ts, tailwind.config.js, postcss.config.js, tsconfig.json
@@ -324,6 +356,7 @@ User picks format/folder ─▶ App.Enqueue ─▶ downloader queue (N workers)
 - **No console flashes on Windows**: every subprocess uses `CREATE_NO_WINDOW`.
 - **Error codes, not strings.** The backend returns `{"code":"ERR_LOGIN_REQUIRED","detail":"…"}`. The frontend maps each code to a localized title, a hint and a one-click fix (open cookie settings, network settings, install/update engine). Codes: `ERR_INVALID_URL, ERR_UNSUPPORTED_URL, ERR_LOGIN_REQUIRED, ERR_AGE_RESTRICTED, ERR_PRIVATE, ERR_GEO_BLOCKED, ERR_NOT_FOUND, ERR_RATE_LIMITED, ERR_DRM, ERR_NETWORK, ERR_TIMEOUT, ERR_PROXY, ERR_COOKIES, ERR_FFMPEG_MISSING, ERR_ENGINE_MISSING, ERR_ENGINE_INSTALL, ERR_CHECKSUM, ERR_DISK, ERR_CANCELED, ERR_LIVE_NOT_STARTED, ERR_FORMAT_UNAVAILABLE, ERR_SPOTIFY_UNSUPPORTED, ERR_SPOTIFY_MATCH, ERR_BUSY, ERR_JOB_NOT_FOUND, ERR_UNKNOWN`.
 - **Engine sources**: yt-dlp from GitHub releases, ffmpeg + ffprobe from BtbN (Windows/Linux) or Martin Riedl (macOS), Deno from GitHub. yt-dlp uses Deno to list YouTube formats.
+- **Self-update** (`internal/updater`). The latest tag comes from following `github.com/<repo>/releases/latest` (no API rate limit, works through proxies that block `api.github.com`). The asset for this OS is downloaded next to the app, so installing is a rename on the same disk, and checked against the release’s `SHA256SUMS.txt`. On macOS the new bundle must also pass `codesign --verify --deep --strict` and carry the same bundle ID (and Team ID, once Developer ID signing is on) as the running app. The swap happens on **Restart now** or on the next quit. A small helper waits for the old process to exit before starting the new one, because the single-instance lock would otherwise hand the launch back to the exiting app. Windows copies installed with Setup run the new Setup with `/S` instead. Leftovers are removed on the next launch, and `wails dev` builds never replace themselves.
 - **Diagnostics.** *Settings → Advanced → Copy diagnostic info* copies versions, tool paths, queue stats, settings (passwords and cookie paths redacted) and the last 150 log lines.
 
 ## Troubleshooting

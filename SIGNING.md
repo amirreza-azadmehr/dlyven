@@ -94,8 +94,8 @@ codesign --verify --deep --strict --verbose=2 /Applications/Dlyven.app
 codesign -dv --verbose=4 /Applications/Dlyven.app       # Authority=Developer ID…, flags=…runtime, Timestamp=…
 codesign -d --entitlements - /Applications/Dlyven.app
 spctl -a -vvv -t exec /Applications/Dlyven.app          # "source=Notarized Developer ID"
-spctl -a -vvv -t open --context context:primary-signature Dlyven-macos-universal.dmg
-xcrun stapler validate Dlyven-macos-universal.dmg
+spctl -a -vvv -t open --context context:primary-signature Dlyven-macOS-Universal.dmg
+xcrun stapler validate Dlyven-macOS-Universal.dmg
 ```
 
 An ad-hoc build shows `Signature=adhoc`, and `spctl` reports `rejected`. That's expected.
@@ -104,7 +104,7 @@ An ad-hoc build shows `Signature=adhoc`, and `spctl` reports `rejected`. That's 
 
 ## Windows
 
-The workflow uses the **first complete set** it finds, in this order: PFX → Azure Artifact Signing → SignPath. Both `Dlyven.exe` (before it is packed into the installer) and `Dlyven-windows-amd64-installer.exe` are signed and timestamped. The installer is rebuilt with `makensis` after the exe is signed (`scripts/package-nsis.ps1`), so it ships the signed copy.
+The workflow uses the **first complete set** it finds, in this order: PFX → Azure Artifact Signing → SignPath. Both `Dlyven.exe` (before it is packed into the installer) and the installer are signed and timestamped; they ship as `Dlyven-Windows-x64-Portable.exe` and `Dlyven-Windows-x64-Setup.exe`. The installer is rebuilt with `makensis` after the exe is signed (`scripts/package-nsis.ps1`), so it ships the signed copy.
 
 ### Option 1: PFX certificate (OV/EV code-signing cert you hold as a file)
 
@@ -164,8 +164,8 @@ The build job uploads each unsigned exe as a short-lived artifact (`signpath-uns
 ### Verify locally
 
 ```powershell
-Get-AuthenticodeSignature .\Dlyven-windows-amd64.exe | Format-List Status, SignerCertificate, TimeStamperCertificate
-signtool verify /pa /v .\Dlyven-windows-amd64-installer.exe
+Get-AuthenticodeSignature .\Dlyven-Windows-x64-Portable.exe | Format-List Status, SignerCertificate, TimeStamperCertificate
+signtool verify /pa /v .\Dlyven-Windows-x64-Setup.exe
 ```
 
 A valid signature removes the “Unknown publisher” label, but SmartScreen reputation builds up over time and downloads. Since 2024 even EV certificates don't skip that.

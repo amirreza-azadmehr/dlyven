@@ -6,7 +6,8 @@ import { useDownloads } from '@/store/downloads'
 import { useEngine } from '@/store/engine'
 import { useSettings } from '@/store/settings'
 import { useUI } from '@/store/ui'
-import { useClipboardWatch, useFinishFeedback, useShortcuts } from '@/hooks/useGlobalBehaviors'
+import { useUpdate } from '@/store/update'
+import { useClipboardWatch, useFinishFeedback, useShortcuts, useUpdateNotice } from '@/hooks/useGlobalBehaviors'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TitleBar } from '@/components/layout/TitleBar'
 import { Toaster } from '@/components/ui/Feedback'
@@ -37,7 +38,7 @@ export default function App() {
       }
       // Engine status used to exec yt-dlp --version (45s hang on macOS) before Home
       // painted. Subscribe in the background so search is usable immediately.
-      const subs = await Promise.all([useDownloads.getState().init(), useEngine.getState().init()]).catch((e) => {
+      const subs = await Promise.all([useDownloads.getState().init(), useEngine.getState().init(), useUpdate.getState().init()]).catch((e) => {
         console.error('init failed', e)
         return [] as Array<() => void>
       })
@@ -64,6 +65,7 @@ export default function App() {
   useShortcuts()
   useClipboardWatch()
   useFinishFeedback()
+  useUpdateNotice()
 
   const dir = i18n.dir() === 'rtl' ? -1 : 1
 

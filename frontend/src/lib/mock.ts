@@ -12,6 +12,7 @@ import type {
   PlatformDef,
   PlatformInfo,
   Settings,
+  UpdateStatus,
 } from './types'
 
 const platforms: PlatformDef[] = [
@@ -51,7 +52,7 @@ const defaults: Settings = {
   defaultAudioFormat: 'mp3', defaultAudioBitrate: '320', embedThumbnail: true, embedMetadata: true, embedChapters: true,
   proxyEnabled: false, proxyType: 'http', proxyHost: '', proxyPort: 0, proxyUser: '', proxyPass: '', userAgent: '',
   retries: 3, timeoutSec: 30, cookiesMode: 'none', cookiesBrowser: 'chrome', cookiesFile: '', ytDlpPath: '', ffmpegPath: '',
-  autoUpdateEngine: true, clipboardWatch: false, openFolderOnDone: false, notify: true, playSound: true,
+  autoUpdateEngine: true, autoCheckUpdates: true, clipboardWatch: false, openFolderOnDone: false, notify: true, playSound: true,
 }
 
 function vf(id: string, h: number, fps: number, vcodec: string, tbr: number, ext = 'mp4', hdr = false, audio = false): Format {
@@ -182,6 +183,20 @@ export function createMockBackend() {
     deno: { name: 'deno', installed: true, path: '~/Dlyven/bin/deno', version: '2.9.8', source: 'managed', latest: '', updateAvailable: false, optional: true },
     busy: false, ready: true,
   }
+
+  // ?update=1 pretends a newer release exists; ?update=manual shows the download-it-yourself
+  // flow; ?update=ready opens with the update downloaded and waiting for a restart.
+  const update: UpdateStatus = {
+    current: '1.0.2', latest: '', available: false, mode: q.get('update') === 'manual' ? 'manual' : 'replace',
+    asset: 'Dlyven-macOS-Universal.zip', releaseUrl: 'https://github.com/amirreza-azadmehr/dlyven/releases/latest', ready: false, busy: false,
+  }
+  const checkUpdate = () => {
+    if (q.get('update')) Object.assign(update, { latest: '1.0.3', available: true, ready: q.get('update') === 'ready', releaseUrl: 'https://github.com/amirreza-azadmehr/dlyven/releases/tag/v1.0.3' })
+    else update.latest = update.current
+    emit('update:status', { ...update })
+    return { ...update }
+  }
+  if (q.get('update')) setTimeout(checkUpdate, 1200)
 
   function tick(id: string) {
     const j = jobs.get(id)
@@ -316,6 +331,21 @@ export function createMockBackend() {
       return engine
     },
     async CheckEngineUpdates() { return engine },
+    async GetUpdateStatus() { return { ...update } },
+    async CheckForUpdates() { await new Promise((r) => setTimeout(r, 600)); return checkUpdate() },
+    async DownloadUpdate() {
+      update.busy = true
+      for (const pct of [8, 30, 55, 80, 100]) {
+        await new Promise((r) => setTimeout(r, 350))
+        emit('update:progress', { stage: 'downloading', percent: pct, downloaded: pct * 210000, total: 21000000 })
+      }
+      emit('update:progress', { stage: 'verifying', percent: 100, downloaded: 0, total: 0 })
+      await new Promise((r) => setTimeout(r, 400))
+      Object.assign(update, { busy: false, ready: true })
+      emit('update:progress', { stage: 'ready', percent: 100, downloaded: 0, total: 0 })
+      return { ...update }
+    },
+    async RestartToUpdate() { location.reload() },
     async ListHistory(q) {
       let items = history.filter((h) => (!q.search || h.title.toLowerCase().includes(q.search.toLowerCase())) && (!q.platform || h.platform === q.platform) && (!q.status || h.status === q.status))
       const total = items.length

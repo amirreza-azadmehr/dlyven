@@ -6,6 +6,7 @@ import { useFormat } from '@/lib/format'
 import { useActiveCount } from '@/store/downloads'
 import { useSettings } from '@/store/settings'
 import { useUI, type Route } from '@/store/ui'
+import { useUpdate } from '@/store/update'
 import { isWails } from '@/lib/api'
 import { Tooltip } from '../ui/Tooltip'
 
@@ -23,8 +24,9 @@ export function Sidebar() {
   const active = useActiveCount()
   const fmt = useFormat()
   const mac = useSettings((s) => s.app?.os === 'darwin')
+  const updateReady = useUpdate((s) => !!s.status?.available)
 
-  const item = (r: Route, Icon: LucideIcon, label: string, badge?: number) => {
+  const item = (r: Route, Icon: LucideIcon, label: string, badge?: number, dot?: boolean) => {
     const selected = route === r
     return (
       <Tooltip content={label} side={document.documentElement.dir === 'rtl' ? 'left' : 'right'} key={r}>
@@ -32,7 +34,9 @@ export function Sidebar() {
           type="button"
           onClick={() => navigate(r)}
           aria-current={selected ? 'page' : undefined}
-          aria-label={badge ? `${label} — ${t('nav.activeBadge', { count: badge, n: fmt.number(badge) })}` : label}
+          aria-label={
+            badge ? `${label} — ${t('nav.activeBadge', { count: badge, n: fmt.number(badge) })}` : dot ? `${label} — ${t('updates.badge')}` : label
+          }
           className={cn(
             'no-drag group relative flex w-[68px] flex-col items-center gap-1 rounded-xl px-1 py-2 text-2xs font-medium leading-tight transition-colors',
             selected ? 'text-fg' : 'text-subtle hover:text-fg',
@@ -58,6 +62,9 @@ export function Sidebar() {
               >
                 {fmt.number(badge)}
               </motion.span>
+            )}
+            {dot && !badge && (
+              <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="absolute -end-1 -top-0.5 size-2 rounded-full bg-accent-gradient" aria-hidden />
             )}
           </span>
           <span className="relative line-clamp-2 max-w-full break-words text-center">{label}</span>
@@ -86,7 +93,7 @@ export function Sidebar() {
       </div>
       {ITEMS.map((i) => item(i.route, i.icon, t(i.key), i.route === 'downloads' ? active : undefined))}
       <div className="flex-1" />
-      {item('settings', Settings2, t('nav.settings'))}
+      {item('settings', Settings2, t('nav.settings'), undefined, updateReady)}
     </nav>
   )
 }

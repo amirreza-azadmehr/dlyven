@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+  Source of dmg-background.png / dmg-background@2x.png (the drag-to-Applications window,
+  see dmg-settings.py). After editing, re-render both from this folder:
+
+    CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+    "$CHROME" --headless=new --hide-scrollbars --window-size=640,400 --force-device-scale-factor=1 --screenshot=dmg-background.png "file://$PWD/dmg-background.html"
+    "$CHROME" --headless=new --hide-scrollbars --window-size=640,400 --force-device-scale-factor=2 --screenshot=dmg-background@2x.png "file://$PWD/dmg-background.html"
+
+  The arrow sits between the icon positions in dmg-settings.py; move them together.
+-->
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; width: 640px; height: 400px; overflow: hidden; }
+  body {
+    /* Mid-tone on purpose (relative luminance ~0.175): Finder draws icon labels black in
+       light mode and white in dark mode, and both clear 4.5:1 on this. */
+    background:
+      radial-gradient(420px 260px at 18% 8%, rgba(255,255,255,0.10), transparent 70%),
+      radial-gradient(380px 260px at 88% 100%, rgba(30,20,70,0.16), transparent 70%),
+      linear-gradient(135deg, #6b70a8 0%, #7a6aa8 100%);
+  }
+  svg { position: absolute; left: 0; top: 0; }
+</style>
+</head>
+<body>
+<svg width="640" height="400" viewBox="0 0 640 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="soft" x="-20%" y="-50%" width="140%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#1b1640" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <!-- Arrow between the app (x=160) and Applications (x=480), at icon height (y=190). -->
+  <g filter="url(#soft)" fill="none" stroke="#ffffff" stroke-opacity="0.92" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M262 190 H372"/>
+    <path d="M346 162 L376 190 L346 218"/>
+  </g>
+</svg>
+</body>
+</html>

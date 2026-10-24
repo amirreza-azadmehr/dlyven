@@ -7,6 +7,7 @@ import type { Job } from '@/lib/types'
 import { useAnalysis } from '@/store/analysis'
 import { useSettings } from '@/store/settings'
 import { useUI } from '@/store/ui'
+import { useUpdate } from '@/store/update'
 import { DOWNLOAD_EVENT } from '@/pages/home/DownloadBar'
 import { errorHint, errorTitle } from '@/components/ErrorPanel'
 
@@ -116,6 +117,28 @@ export function useFinishFeedback() {
           action: { label: t('result.viewDownloads'), run: () => ui.navigate('downloads') },
         })
       }
+    })
+  }, [t])
+}
+
+let updateNoticeShown = false
+
+/** One toast per session when a new Dlyven is out. Settings → Updates does the rest. */
+export function useUpdateNotice() {
+  const { t } = useTranslation()
+  useEffect(() => {
+    return useUpdate.subscribe(({ status }) => {
+      if (updateNoticeShown || !status?.available) return
+      updateNoticeShown = true
+      const ui = useUI.getState()
+      if (ui.route === 'settings') return
+      ui.toast({
+        kind: 'info',
+        title: t('updates.toastTitle', { version: status.latest }),
+        body: t('updates.toastBody'),
+        action: { label: t('updates.toastAction'), run: () => ui.navigate('settings', 'updates') },
+        duration: 12000,
+      })
     })
   }, [t])
 }

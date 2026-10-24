@@ -348,11 +348,16 @@ func (m *Manager) Update(ctx context.Context, force bool) error {
 }
 
 func (m *Manager) latestYtDlpTag(ctx context.Context) (string, error) {
-	// Follow the /releases/latest redirect instead of the API: no rate limit, works
-	// through proxies that block api.github.com.
-	client := m.httpClient()
+	return LatestReleaseTag(ctx, m.httpClient(), "https://github.com/yt-dlp/yt-dlp")
+}
+
+// LatestReleaseTag returns the tag of a GitHub repository's latest published release.
+// It follows the /releases/latest redirect instead of the API: no rate limit, works
+// through proxies that block api.github.com.
+func LatestReleaseTag(ctx context.Context, c *http.Client, repoURL string) (string, error) {
+	client := *c
 	client.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, "https://github.com/yt-dlp/yt-dlp/releases/latest", nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, repoURL+"/releases/latest", nil)
 	if err != nil {
 		return "", err
 	}

@@ -288,6 +288,7 @@
       "network": "Network",
       "cookies": "Login & cookies",
       "engine": "Download engine",
+      "updates": "Updates",
       "behavior": "Behavior",
       "advanced": "Advanced"
     },
@@ -441,6 +442,36 @@
       "extracting": "Installing…",
       "done": "Ready",
       "error": "Failed"
+    }
+  },
+  "updates": {
+    "title": "Dlyven update",
+    "intro": "New versions are published on GitHub. Updates come from the official release and are verified before they're installed. Your settings, history and queue stay as they are.",
+    "notChecked": "Not checked yet",
+    "upToDate": "You're on the latest version",
+    "available": "Dlyven {{version}} is available",
+    "availableBody": "One click downloads, verifies and installs it. No reinstall needed.",
+    "manualHint": "This copy can't replace itself (it may be running from a read-only folder or straight from the disk image). Download the new version from GitHub instead.",
+    "installed": "Installed",
+    "install": "Update now",
+    "downloadManual": "Download from GitHub",
+    "whatsNew": "What's new",
+    "check": "Check for updates",
+    "ready": "Update ready to install",
+    "readyBody": "Restart Dlyven to finish. If you don't, it's installed the next time Dlyven closes.",
+    "readyBodyInstaller": "Restart to run the installer. Windows asks for permission, then Dlyven opens again.",
+    "restart": "Restart now",
+    "activeDownloads": "Downloads in progress stop for the restart and continue right after.",
+    "auto": "Check for updates automatically",
+    "autoHint": "Looks for a new version on GitHub when Dlyven starts. Nothing is downloaded until you click Update now.",
+    "badge": "Update available",
+    "toastTitle": "Dlyven {{version}} is available",
+    "toastBody": "Install it from Settings → Updates.",
+    "toastAction": "View",
+    "stages": {
+      "downloading": "Downloading",
+      "verifying": "Verifying checksum…",
+      "preparing": "Preparing…"
     }
   },
   "errors": {

@@ -44,20 +44,23 @@
 
 ## نصب
 
-1. [آخرین نسخه](https://github.com/amirreza-azadmehr/dlyven/releases/latest) رو باز کن.
-2. **یه فایل** بردار، همونی که مال سیستمته:
+**یه فایل** بردار، همونی که مال سیستمته (لینک‌ها همیشه آخرین نسخه رو می‌دن):
 
-| سیستمت | فایل |
+| سیستمت | دانلود |
 | --- | --- |
-| ویندوز | `Dlyven-windows-amd64.exe` |
-| مک (اینتل یا اپل سیلیکون) | `Dlyven-macos-universal.zip` |
-| لینوکس x64 | `Dlyven-linux-amd64` |
-| لینوکس ARM | `Dlyven-linux-arm64` |
+| ویندوز 10 / 11، نصب‌کننده (پیشنهادی) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| ویندوز 10 / 11، پرتابل (بدون نصب) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| مک (اپل سیلیکون یا اینتل) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| لینوکس x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| لینوکس ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. بازش کن. ویندوز: دابل‌کلیک روی `.exe`. لینوکس: اول `chmod +x Dlyven-linux-*` بعد اجرا. مک: از زیپ دربیار، `Dlyven.app` رو باز کن.
-4. بار اول اینترنت می‌خواد — خودش yt-dlp و ffmpeg رو می‌گیره. بعدش لینک رو بچسبون و دانلود کن.
+بعدش: ویندوز: Setup رو اجرا کن، یا روی `.exe` پرتابل دابل‌کلیک کن. مک: `.dmg` رو باز کن و Dlyven رو بکش روی Applications. لینوکس: اول `chmod +x Dlyven-Linux-*` بعد اجرا (WebKitGTK 4.1 لازمه: اوبونتو 22.04+ / دبیان 12+).
 
-همین. نصب‌کننده نداره. بیلدهای رسمی وقتی گواهی اپل/ویندوز ست بشه امضا می‌شن. از سورس؟ [README برنامه‌نویس](../../README.md).
+بار اول اینترنت می‌خواد — خودش yt-dlp و ffmpeg رو می‌گیره. بعدش لینک رو بچسبون و دانلود کن.
+
+**آپدیت:** نسخهٔ جدید که بیاد، خود Dlyven خبرت می‌کنه. **تنظیمات ← به‌روزرسانی ← به‌روزرسانی**. نصب دوباره لازم نیست.
+
+بار اول هشدار امنیتی دیدی؟ [اینجا رو ببین](../../README.md#installation-and-security-warnings). از سورس؟ [README برنامه‌نویس](../../README.md).
 
 ## چطور کار می‌کنه
 
@@ -86,7 +89,7 @@
 
 **آهنگ رو مستقیم از اسپاتیفای می‌کشه؟** نه. فقط یه نسخهٔ عمومی رو مچ می‌کنه.
 
-**جایی گزارش می‌فرسته؟** نه.
+**جایی گزارش می‌فرسته؟** نه. هیچ آماری نمی‌فرسته؛ فقط برای گرفتن ابزارهاش و چک کردن آپدیت به گیت‌هاب وصل می‌شه (چک خودکار رو توی تنظیمات می‌شه خاموش کرد).
 
 **فایلام کجاست؟** ویندوز `%AppData%\Dlyven` · مک `~/Library/Application Support/Dlyven` · لینوکس `~/.config/Dlyven`.
 

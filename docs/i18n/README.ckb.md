@@ -44,20 +44,23 @@
 
 ## دامەزراندن
 
-1. [دوایین وەشان](https://github.com/amirreza-azadmehr/dlyven/releases/latest) بکەرەوە.
-2. **یەک** فایل دابگرە:
+**یەک** فایل دابگرە (بەستەرەکان هەمیشە دوایین وەشان دەدەن):
 
-| کۆمپیوتەرەکەت | فایل |
+| کۆمپیوتەرەکەت | داگرتن |
 | --- | --- |
-| ویندۆز | `Dlyven-windows-amd64.exe` |
-| ماک (ئەنتێل یان ئەپڵ سیلیکۆن) | `Dlyven-macos-universal.zip` |
-| لینوکس x64 | `Dlyven-linux-amd64` |
-| لینوکس ARM | `Dlyven-linux-arm64` |
+| ویندۆز 10 / 11، دامەزرێنەر (پێشنیارکراو) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| ویندۆز 10 / 11، پۆرتەبڵ (بێ دامەزراندن) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| ماک (ئەپڵ سیلیکۆن یان ئەنتێل) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| لینوکس x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| لینوکس ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. بیکەرەوە. ویندۆز: دووجار کلیک لەسەر `.exe`. لینوکس: سەرەتا `chmod +x Dlyven-linux-*` پاشان جێبەجێی بکە. ماک: زیپ بکەرەوە و `Dlyven.app` بکەرەوە.
-4. یەکەم جار ئینتەرنێتی دەوێت — خۆی yt-dlp و ffmpeg دەهێنێت. دوای ئەوە لینک بلکێنە و دایبگرە.
+پاشان: ویندۆز: Setup کار پێ بکە، یان دووجار کلیک لەسەر `.exe`ـی پۆرتەبڵ بکە. ماک: `.dmg` بکەرەوە و Dlyven ڕابکێشە سەر Applications. لینوکس: سەرەتا `chmod +x Dlyven-Linux-*` پاشان جێبەجێی بکە (WebKitGTK 4.1 پێویستە: ئوبونتو 22.04+ / دێبیان 12+).
 
-دامەزرێنەر نییە. بڵاوکراوە فەرمییەکان کاتێک بڕوانامەی ئەپڵ / ویندۆز هەبێت واژۆ دەکرێن. لە سەرچاوە؟ [READMEی گەشەپێدەر](../../README.md).
+یەکەم جار ئینتەرنێتی دەوێت — خۆی yt-dlp و ffmpeg دەهێنێت. دوای ئەوە لینک بلکێنە و دایبگرە.
+
+**نوێکردنەوە:** کاتێک وەشانێکی نوێ دێت، Dlyven خۆی پێت دەڵێت. **ڕێکخستنەکان ← نوێکردنەوەکان ← ئێستا نوێی بکەرەوە**. پێویست بە دووبارە دامەزراندن ناکات.
+
+یەکەم جار ئاگاداریی ئاسایش دەبینیت؟ [ئێرە ببینە](../../README.md#installation-and-security-warnings). لە سەرچاوە؟ [READMEی گەشەپێدەر](../../README.md).
 
 ## چۆن بەکاری بهێنیت
 
@@ -86,7 +89,7 @@
 
 **گۆرانی ڕاستەوخۆ لە سپۆتیفای؟** نەخێر. تەنها تۆمارێکی گشتی دەگونجێنین.
 
-**ڕاپۆرت دەنێرێت؟** نەخێر.
+**ڕاپۆرت دەنێرێت؟** نەخێر. هیچ ئامارێک نانێرێت؛ تەنها بۆ هێنانی ئامرازەکانی و پشکنینی نوێکردنەوە پەیوەندی بە گیتهەبەوە دەکات (پشکنینی خۆکار لە ڕێکخستنەکان دەکوژێنرێتەوە).
 
 **فایلەکانم لە کوێن؟** ویندۆز `%AppData%\Dlyven` · ماک `~/Library/Application Support/Dlyven` · لینوکس `~/.config/Dlyven`.
 

@@ -44,20 +44,23 @@
 
 ## 安装
 
-1. 打开[最新版本](https://github.com/amirreza-azadmehr/dlyven/releases/latest)。
-2. 只下一**个**文件：
+只下一**个**文件（链接永远指向最新版本）：
 
-| 你的电脑 | 文件 |
+| 你的电脑 | 下载 |
 | --- | --- |
-| Windows | `Dlyven-windows-amd64.exe` |
-| Mac（Intel 或 Apple 芯片） | `Dlyven-macos-universal.zip` |
-| Linux x64 | `Dlyven-linux-amd64` |
-| Linux ARM | `Dlyven-linux-arm64` |
+| Windows 10 / 11，安装版（推荐） | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| Windows 10 / 11，便携版（免安装） | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| Mac（Apple 芯片或 Intel） | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| Linux x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| Linux ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. 打开。Windows：双击 `.exe`。Linux：先 `chmod +x Dlyven-linux-*` 再运行。Mac：解压后打开 `Dlyven.app`。
-4. 第一次需要联网 —— 它自己去拉 yt-dlp 和 ffmpeg。之后贴个链接就能下。
+然后：Windows：运行 Setup，或者双击便携版 `.exe`。Mac：打开 `.dmg`，把 Dlyven 拖到 Applications。Linux：先 `chmod +x Dlyven-Linux-*` 再运行（需要 WebKitGTK 4.1：Ubuntu 22.04+ / Debian 12+）。
 
-不用安装器。官方构建在配好 Apple / Windows 证书后会签名。自己编译？[给开发者的 README](../../README.md)。
+第一次需要联网 —— 它自己去拉 yt-dlp 和 ffmpeg。之后贴个链接就能下。
+
+**更新：**出新版本时 Dlyven 会提醒你。**Settings → Updates → Update now**。不用重装。
+
+第一次打开有安全警告？[看这里](../../README.md#installation-and-security-warnings)。自己编译？[给开发者的 README](../../README.md)。
 
 ## 怎么用
 
@@ -86,7 +89,7 @@ YouTube、Instagram、TikTok、Spotify、X、Facebook、Vimeo、SoundCloud、Red
 
 **能直接从 Spotify 下歌？** 不行。只匹配一条公开录音。
 
-**会偷偷上报吗？** 不会。
+**会偷偷上报吗？** 不会。没有任何统计；只会连 GitHub 下载它用的工具和检查更新（自动检查可以在 Settings 里关掉）。
 
 **文件在哪？** Windows `%AppData%\Dlyven` · Mac `~/Library/Application Support/Dlyven` · Linux `~/.config/Dlyven`.
 

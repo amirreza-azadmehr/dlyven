@@ -42,6 +42,7 @@ export interface Settings {
   ytDlpPath: string
   ffmpegPath: string
   autoUpdateEngine: boolean
+  autoCheckUpdates: boolean
   clipboardWatch: boolean
   openFolderOnDone: boolean
   notify: boolean
@@ -272,6 +273,29 @@ export interface EngineStatus {
 export interface EngineProgress {
   component: string
   stage: 'checking' | 'downloading' | 'verifying' | 'extracting' | 'done' | 'error'
+  percent: number
+  downloaded: number
+  total: number
+  errorCode?: string
+  error?: string
+}
+
+/** How this copy of Dlyven updates: swap itself, run Setup (Windows installs), or by hand. */
+export type UpdateMode = 'replace' | 'installer' | 'manual'
+
+export interface UpdateStatus {
+  current: string
+  latest: string
+  available: boolean
+  mode: UpdateMode
+  asset: string
+  releaseUrl: string
+  ready: boolean
+  busy: boolean
+}
+
+export interface UpdateProgress {
+  stage: 'downloading' | 'verifying' | 'preparing' | 'ready' | 'error'
   percent: number
   downloaded: number
   total: number

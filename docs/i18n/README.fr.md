@@ -44,20 +44,23 @@ Bureau, open source, Windows / macOS / Linux. En dessous c’est [yt-dlp](https:
 
 ## Installer
 
-1. Ouvre la [dernière version](https://github.com/amirreza-azadmehr/dlyven/releases/latest).
-2. Télécharge **un** fichier :
+Télécharge **un** fichier (les liens pointent toujours vers la dernière version) :
 
-| Ton ordi | Fichier |
+| Ton ordi | Téléchargement |
 | --- | --- |
-| Windows | `Dlyven-windows-amd64.exe` |
-| Mac (Intel ou Apple silicon) | `Dlyven-macos-universal.zip` |
-| Linux x64 | `Dlyven-linux-amd64` |
-| Linux ARM | `Dlyven-linux-arm64` |
+| Windows 10 / 11, installeur (recommandé) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| Windows 10 / 11, portable (sans installation) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| Mac (Apple silicon ou Intel) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| Linux x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| Linux ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. Ouvre-le. Windows : double-clic sur le `.exe`. Linux : `chmod +x Dlyven-linux-*` puis lance. Mac : dézippe et ouvre `Dlyven.app`.
-4. La première fois il faut internet — il récupère yt-dlp et ffmpeg tout seul. Ensuite tu colles un lien et c’est parti.
+Ensuite : Windows : lance le Setup, ou double-clique sur le `.exe` portable. Mac : ouvre le `.dmg` et glisse Dlyven sur Applications. Linux : `chmod +x Dlyven-Linux-*` puis lance (il faut WebKitGTK 4.1 : Ubuntu 22.04+ / Debian 12+).
 
-Pas d’installeur. Les builds officielles sont signées dès que les certificats Apple / Windows sont là. Depuis le code ? [README développeur](../../README.md).
+La première fois il faut internet — il récupère yt-dlp et ffmpeg tout seul. Ensuite tu colles un lien et c’est parti.
+
+**Mises à jour :** quand une nouvelle version sort, Dlyven te prévient. **Settings → Updates → Update now**. Pas besoin de réinstaller.
+
+Un avertissement de sécurité au premier lancement ? [Voir ici](../../README.md#installation-and-security-warnings). Depuis le code ? [README développeur](../../README.md).
 
 ## Comment ça marche
 
@@ -86,7 +89,7 @@ YouTube, Instagram, TikTok, Spotify, X, Facebook, Vimeo, SoundCloud, Reddit, Twi
 
 **Je pique les morceaux chez Spotify ?** Non. On matche juste un enregistrement public.
 
-**Ça phone home ?** Non.
+**Ça phone home ?** Pas de télémétrie. Il parle seulement à GitHub pour récupérer ses outils et vérifier les mises à jour (la vérification automatique se coupe dans Settings).
 
 **Mes fichiers ?** Windows `%AppData%\Dlyven` · Mac `~/Library/Application Support/Dlyven` · Linux `~/.config/Dlyven`.
 

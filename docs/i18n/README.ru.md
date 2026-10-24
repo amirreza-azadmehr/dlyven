@@ -44,20 +44,23 @@
 
 ## Установка
 
-1. Открой [последний релиз](https://github.com/amirreza-azadmehr/dlyven/releases/latest).
-2. Скачай **один** файл:
+Скачай **один** файл (ссылки всегда ведут на свежий релиз):
 
-| Твой комп | Файл |
+| Твой комп | Скачать |
 | --- | --- |
-| Windows | `Dlyven-windows-amd64.exe` |
-| Mac (Intel или Apple silicon) | `Dlyven-macos-universal.zip` |
-| Linux x64 | `Dlyven-linux-amd64` |
-| Linux ARM | `Dlyven-linux-arm64` |
+| Windows 10 / 11, установщик (рекомендуется) | [Dlyven-Windows-x64-Setup.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Setup.exe) |
+| Windows 10 / 11, портативная (без установки) | [Dlyven-Windows-x64-Portable.exe](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Windows-x64-Portable.exe) |
+| Mac (Apple silicon или Intel) | [Dlyven-macOS-Universal.dmg](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-macOS-Universal.dmg) |
+| Linux x64 | [Dlyven-Linux-x64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-x64) |
+| Linux ARM64 | [Dlyven-Linux-ARM64](https://github.com/amirreza-azadmehr/dlyven/releases/latest/download/Dlyven-Linux-ARM64) |
 
-3. Открой. Windows: двойной клик по `.exe`. Linux: `chmod +x Dlyven-linux-*` и запускай. Mac: распакуй и открой `Dlyven.app`.
-4. Первый раз нужен интернет — yt-dlp и ffmpeg подтянутся сами. Дальше вставляешь ссылку и качаешь.
+Дальше: Windows: запусти Setup или дважды кликни по портативному `.exe`. Mac: открой `.dmg` и перетащи Dlyven в Applications. Linux: `chmod +x Dlyven-Linux-*` и запускай (нужен WebKitGTK 4.1: Ubuntu 22.04+ / Debian 12+).
 
-Без установщика. Официальные сборки подписываются, когда есть сертификаты Apple / Windows. Из исходников? [README для разработчиков](../../README.md).
+Первый раз нужен интернет — yt-dlp и ffmpeg подтянутся сами. Дальше вставляешь ссылку и качаешь.
+
+**Обновления:** когда выходит новая версия, Dlyven сам скажет. **Settings → Updates → Update now**. Переустанавливать не надо.
+
+Предупреждение безопасности при первом запуске? [Смотри тут](../../README.md#installation-and-security-warnings). Из исходников? [README для разработчиков](../../README.md).
 
 ## Как пользоваться
 
@@ -86,7 +89,7 @@ YouTube, Instagram, TikTok, Spotify, X, Facebook, Vimeo, SoundCloud, Reddit, Twi
 
 **Песни напрямую со Spotify?** Нет. Только матчим публичную запись.
 
-**Шлёт куда-то статистику?** Нет.
+**Шлёт куда-то статистику?** Нет. Только ходит на GitHub за своими инструментами и проверкой обновлений (автопроверку можно выключить в Settings).
 
 **Где мои файлы?** Windows `%AppData%\Dlyven` · Mac `~/Library/Application Support/Dlyven` · Linux `~/.config/Dlyven`.
 

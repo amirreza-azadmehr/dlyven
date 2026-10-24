@@ -12,6 +12,7 @@ import type {
   MediaInfo,
   PlatformInfo,
   Settings,
+  UpdateStatus,
 } from './types'
 import { createMockBackend } from './mock'
 
@@ -48,6 +49,10 @@ export interface Backend {
   InstallEngine(): Promise<EngineStatus>
   UpdateEngine(force: boolean): Promise<EngineStatus>
   CheckEngineUpdates(): Promise<EngineStatus>
+  GetUpdateStatus(): Promise<UpdateStatus>
+  CheckForUpdates(): Promise<UpdateStatus>
+  DownloadUpdate(): Promise<UpdateStatus>
+  RestartToUpdate(): Promise<void>
   ListHistory(q: HistoryQuery): Promise<HistoryPage>
   HistoryPlatforms(): Promise<string[]>
   DeleteHistory(id: string): Promise<void>

@@ -14,6 +14,8 @@ const (
 	// BundleID is the reverse-DNS identifier shared by Android, macOS, and Windows.
 	// Hyphens from the GitHub username are stripped (invalid in those ID formats).
 	BundleID = "io.github.amirrezaazadmehr.dlyven"
+	// RepoURL is where releases are published; the in-app updater checks it.
+	RepoURL = "https://github.com/amirreza-azadmehr/dlyven"
 
 	// legacyName/ID are the previous product folder names. Used only for a one-time data migration.
 	legacyName = "GrabIt"
