@@ -288,6 +288,7 @@
       "network": "Ağ",
       "cookies": "Oturum ve çerezler",
       "engine": "İndirme motoru",
+      "updates": "Güncellemeler",
       "behavior": "Davranış",
       "advanced": "Gelişmiş"
     },
@@ -441,6 +442,36 @@
       "extracting": "Kuruluyor…",
       "done": "Hazır",
       "error": "Başarısız"
+    }
+  },
+  "updates": {
+    "title": "Dlyven güncellemesi",
+    "intro": "Yeni sürümler GitHub'da yayımlanır. Güncellemeler resmi sürümden indirilir ve kurulmadan önce doğrulanır. Ayarlarınız, geçmişiniz ve indirme kuyruğunuz olduğu gibi kalır.",
+    "notChecked": "Henüz denetlenmedi",
+    "upToDate": "En son sürümü kullanıyorsunuz",
+    "available": "Dlyven {{version}} çıktı",
+    "availableBody": "Tek tıkla indirilir, doğrulanır ve kurulur. Yeniden kurmanız gerekmez.",
+    "manualHint": "Bu kopya kendini değiştiremiyor (salt okunur bir klasörden ya da doğrudan disk görüntüsünden çalışıyor olabilir). Yeni sürümü GitHub'dan indirin.",
+    "installed": "Kurulu",
+    "install": "Şimdi güncelle",
+    "downloadManual": "GitHub'dan indir",
+    "whatsNew": "Yenilikler",
+    "check": "Güncellemeleri denetle",
+    "ready": "Güncelleme kuruluma hazır",
+    "readyBody": "Bitirmek için Dlyven'i yeniden başlatın. Başlatmazsanız Dlyven bir sonraki kapanışında kurulur.",
+    "readyBodyInstaller": "Yükleyiciyi çalıştırmak için yeniden başlatın. Windows izin ister, ardından Dlyven yeniden açılır.",
+    "restart": "Şimdi yeniden başlat",
+    "activeDownloads": "Süren indirmeler yeniden başlatma sırasında durur ve hemen ardından devam eder.",
+    "auto": "Güncellemeleri otomatik denetle",
+    "autoHint": "Dlyven açılırken GitHub'da yeni sürüm arar. Şimdi güncelle'ye tıklamadan hiçbir şey indirilmez.",
+    "badge": "Güncelleme var",
+    "toastTitle": "Dlyven {{version}} çıktı",
+    "toastBody": "Ayarlar → Güncellemeler bölümünden kurabilirsiniz.",
+    "toastAction": "Görüntüle",
+    "stages": {
+      "downloading": "İndiriliyor",
+      "verifying": "Sağlama toplamı doğrulanıyor…",
+      "preparing": "Hazırlanıyor…"
     }
   },
   "errors": {

@@ -45,12 +45,13 @@ export function errorHint(t: (k: string) => string, code: string) {
   return v === key ? t('errors.ERR_UNKNOWN.hint') : v
 }
 
-export function ErrorPanel({ error, onRetry }: { error: AppError; onRetry?: () => void }) {
+/** showFix={false} hides the suggested fix, for errors that aren't about downloads or the engine. */
+export function ErrorPanel({ error, onRetry, showFix = true }: { error: AppError; onRetry?: () => void; showFix?: boolean }) {
   const { t } = useTranslation()
   const navigate = useUI((s) => s.navigate)
   const engine = useEngine()
   const [open, setOpen] = useState(false)
-  const fix = fixFor(error.code)
+  const fix = showFix ? fixFor(error.code) : null
 
   return (
     <motion.div

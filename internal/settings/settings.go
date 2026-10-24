@@ -59,6 +59,9 @@ type Settings struct {
 	FfmpegPath       string `json:"ffmpegPath"` // "" = auto
 	AutoUpdateEngine bool   `json:"autoUpdateEngine"`
 
+	// Updates (Dlyven itself)
+	AutoCheckUpdates bool `json:"autoCheckUpdates"`
+
 	// Behaviour
 	ClipboardWatch   bool `json:"clipboardWatch"`
 	OpenFolderOnDone bool `json:"openFolderOnDone"`
@@ -115,6 +118,7 @@ func Defaults() Settings {
 		CookiesMode:         "none",
 		CookiesBrowser:      "chrome",
 		AutoUpdateEngine:    true,
+		AutoCheckUpdates:    true,
 		ClipboardWatch:      false,
 		Notify:              true,
 		PlaySound:           true,

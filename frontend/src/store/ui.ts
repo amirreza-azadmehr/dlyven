@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 export type Route = 'home' | 'downloads' | 'history' | 'settings'
-export type SettingsSection = 'appearance' | 'downloads' | 'network' | 'cookies' | 'engine' | 'behavior' | 'advanced'
+export type SettingsSection = 'appearance' | 'downloads' | 'network' | 'cookies' | 'engine' | 'updates' | 'behavior' | 'advanced'
 
 export interface Toast {
   id: number

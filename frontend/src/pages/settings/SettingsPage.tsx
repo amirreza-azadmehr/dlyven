@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Cpu, Download, Globe2, KeyRound, Palette, SlidersHorizontal, Wrench } from 'lucide-react'
+import { CircleArrowUp, Cpu, Download, Globe2, KeyRound, Palette, SlidersHorizontal, Wrench } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/cn'
@@ -10,6 +10,7 @@ import { AppearanceSection } from './AppearanceSection'
 import { DownloadsSection } from './DownloadsSection'
 import { AdvancedSection, BehaviorSection, CookiesSection, NetworkSection } from './OtherSections'
 import { EngineSection } from './EngineSection'
+import { UpdatesSection } from './UpdatesSection'
 
 const SECTIONS: { id: SettingsSection; icon: typeof Palette }[] = [
   { id: 'appearance', icon: Palette },
@@ -17,6 +18,7 @@ const SECTIONS: { id: SettingsSection; icon: typeof Palette }[] = [
   { id: 'network', icon: Globe2 },
   { id: 'cookies', icon: KeyRound },
   { id: 'engine', icon: Cpu },
+  { id: 'updates', icon: CircleArrowUp },
   { id: 'behavior', icon: SlidersHorizontal },
   { id: 'advanced', icon: Wrench },
 ]
@@ -84,6 +86,7 @@ export function SettingsPage() {
           <NetworkSection />
           <CookiesSection />
           <EngineSection />
+          <UpdatesSection />
           <BehaviorSection />
           <AdvancedSection />
         </div>
