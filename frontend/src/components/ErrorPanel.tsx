@@ -14,6 +14,8 @@ function fixFor(code: string): { label: string; section?: SettingsSection; engin
     case 'ERR_AGE_RESTRICTED':
     case 'ERR_PRIVATE':
     case 'ERR_COOKIES':
+    case 'ERR_COOKIES_ENCRYPTED':
+    case 'ERR_COOKIES_LOCKED':
       return { label: 'errors.actions.openCookies', section: 'cookies' }
     case 'ERR_NETWORK':
     case 'ERR_TIMEOUT':

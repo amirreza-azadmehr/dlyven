@@ -374,6 +374,7 @@
     },
     "cookiesBrowser": "Browser",
     "cookiesBrowserHint": "Sign in to the site in that browser first. Chrome and Edge may need to be closed while Dlyven reads cookies.",
+    "cookiesChromiumWindows": "On Windows, Chrome, Edge, Brave and other Chromium browsers encrypt cookies so no download tool can read them. Choose Firefox, or switch to a cookies.txt file.",
     "cookiesFile": "cookies.txt file",
     "cookiesFileHint": "Export it with a “cookies.txt” browser extension (Netscape format).",
     "chooseCookies": "Choose cookies.txt",
@@ -539,6 +540,14 @@
     "ERR_COOKIES": {
       "title": "Couldn't read browser cookies",
       "hint": "Close the browser completely and try again, or export a cookies.txt file instead."
+    },
+    "ERR_COOKIES_ENCRYPTED": {
+      "title": "Chrome and Edge keep their cookies locked on Windows",
+      "hint": "Since 2024 these browsers encrypt cookies so only they can read them, and no download tool can. Switch the browser to Firefox in Settings → Sign-in, or export a cookies.txt file instead."
+    },
+    "ERR_COOKIES_LOCKED": {
+      "title": "The browser is holding its cookie database",
+      "hint": "Quit the browser completely (also from the system tray, or end it in Task Manager) and try again. If it keeps happening, use Firefox or a cookies.txt file."
     },
     "ERR_FFMPEG_MISSING": {
       "title": "ffmpeg is missing",

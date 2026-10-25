@@ -26,6 +26,8 @@ const (
 	ErrTimeout            Code = "ERR_TIMEOUT"
 	ErrProxy              Code = "ERR_PROXY"
 	ErrCookies            Code = "ERR_COOKIES"
+	ErrCookiesEncrypted   Code = "ERR_COOKIES_ENCRYPTED" // Chrome/Edge app-bound encryption: unreadable by any outside tool
+	ErrCookiesLocked      Code = "ERR_COOKIES_LOCKED"    // the browser holds its cookie database open
 	ErrFFmpegMissing      Code = "ERR_FFMPEG_MISSING"
 	ErrEngineMissing      Code = "ERR_ENGINE_MISSING"
 	ErrEngineInstall      Code = "ERR_ENGINE_INSTALL"
@@ -116,7 +118,10 @@ type rule struct {
 // Order matters: more specific rules come first.
 var rules = []rule{
 	{ErrFFmpegMissing, []string{"ffmpeg not found", "ffprobe and ffmpeg not found", "ffmpeg is not installed", "ffprobe/avprobe and ffmpeg/avconv not found"}},
-	{ErrCookies, []string{"could not copy chrome cookie database", "could not copy", "failed to decrypt", "cookies database", "could not find firefox cookies", "could not find chrome cookies", "unsupported browser specified for cookies", "failed to load cookies"}},
+	// yt-dlp can't read Chromium v20 (app-bound) cookies on Windows; see yt-dlp#10927.
+	{ErrCookiesEncrypted, []string{"failed to decrypt with dpapi", "app-bound", "app bound", "v20 cookie", "issues/10927"}},
+	{ErrCookiesLocked, []string{"could not copy chrome cookie database", "could not copy edge cookie database", "could not copy brave cookie database", "could not copy chromium cookie database", "cookie database", "database is locked", "being used by another process"}},
+	{ErrCookies, []string{"could not copy", "failed to decrypt", "cookies database", "could not find firefox cookies", "could not find chrome cookies", "unsupported browser specified for cookies", "failed to load cookies"}},
 	{ErrDRM, []string{"drm protected", "this video is drm", " drm", "widevine"}},
 	{ErrAgeRestricted, []string{"sign in to confirm your age", "age-restricted", "age restricted", "inappropriate for some users", "confirm your age"}},
 	{ErrPrivate, []string{"private video", "this video is private", "this account is private", "private account", "is private"}},
