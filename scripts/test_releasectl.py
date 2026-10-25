@@ -1,7 +1,7 @@
 """Tests for scripts/releasectl.py (real git repos; a bare remote that can refuse tag creation)
 and for the security-relevant shape of .github/workflows/release.yml.
 
-    python3 -m unittest discover -s scripts -p 'test_*.py'
+    python3 -m unittest discover -b -s scripts -p 'test_*.py'
 """
 import importlib.util
 import json

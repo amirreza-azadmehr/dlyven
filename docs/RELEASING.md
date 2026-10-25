@@ -1,7 +1,7 @@
 # Releasing
 
 Releases are decided by `scripts/auto-release.py` and guarded by `scripts/releasectl.py`
-(tests: `python3 -m unittest discover -s scripts -p 'test_*.py'`).
+(tests: `python3 -m unittest discover -b -s scripts -p 'test_*.py'`).
 
 | Trigger | Result |
 | --- | --- |
