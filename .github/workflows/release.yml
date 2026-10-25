@@ -68,12 +68,13 @@ jobs:
           HAS_TAG_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN != '' }}
         run: python3 scripts/auto-release.py
       # Never build over an existing release: published ones are immutable and a draft is
-      # only adopted when the maintainer pushes its tag deliberately.
+      # only reused when it targets this commit and holds nothing that would be lost.
       - name: Refuse to overwrite an existing release
         if: steps.d.outputs.should == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.d.outputs.version }}
+          SHA: ${{ github.sha }}
         run: python3 scripts/releasectl.py guard
 
   build:
@@ -446,12 +447,13 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.RELEASE_TAG_TOKEN }}
-      # An automatic run must not adopt (and later overwrite) a pre-existing draft; the release
-      # token can see drafts, the read-only decide token cannot.
+      # A pre-existing draft is only reused when that loses nothing (see releasectl.py); the
+      # release token can see drafts, the read-only decide token cannot.
       - name: Refuse to tag over an existing release or draft
         env:
           GH_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN }}
           VERSION: ${{ needs.decide.outputs.version }}
+          SHA: ${{ github.sha }}
         run: python3 scripts/releasectl.py guard
       - name: Push the tag (the tag run builds and publishes it)
         env:
@@ -492,6 +494,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ needs.decide.outputs.version }}
+          SHA: ${{ github.sha }}
         run: python3 scripts/releasectl.py guard
       - name: Combined checksums
         run: |

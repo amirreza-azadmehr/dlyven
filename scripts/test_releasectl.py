@@ -4,6 +4,7 @@ and for the security-relevant shape of .github/workflows/release.yml.
     python3 -m unittest discover -s scripts -p 'test_*.py'
 """
 import importlib.util
+import json
 import pathlib
 import subprocess
 import tempfile
@@ -150,30 +151,113 @@ class TagTest(unittest.TestCase):
         self.assertEqual(rc.main(["verify"], e.env()), 0)
 
 
-def fake_gh(stdout="", stderr="", code=0):
-    return lambda *a: SimpleNamespace(returncode=code, stdout=stdout, stderr=stderr)
+REAL_DRAFT = {  # the stale v1.0.1 draft, as GitHub reports it
+    "isDraft": True, "targetCommitish": "8915822a5243ab149a5f3d6a1ee4242d217576c2",
+    "body": "**Full Changelog**: https://github.com/amirreza-azadmehr/dlyven/compare/v1.0.0...v1.0.1",
+    "assets": [{"name": n} for n in ("Dlyven-linux-amd64.sha256", "Dlyven-linux-arm64.sha256",
+                                      "Dlyven-macos-universal.zip.sha256", "Dlyven-macos-universal.dmg.sha256")],
+}
+
+
+class FakeGh:
+    """Stands in for gh and records every call, so tests can prove the guard is read-only."""
+
+    def __init__(self, info=None, stderr="", code=0):
+        self.calls = []
+        self.info, self.stderr, self.code = info, stderr, code
+
+    def __call__(self, *args):
+        self.calls.append(args)
+        if self.info is None and not self.code:
+            return SimpleNamespace(returncode=1, stdout="", stderr="release not found")
+        out = json.dumps(self.info) if self.info is not None else ""
+        return SimpleNamespace(returncode=self.code, stdout=out, stderr=self.stderr)
+
+
+def draft(**kw):
+    return {**{"isDraft": True, "targetCommitish": "", "body": "", "assets": []}, **kw}
 
 
 class GuardTest(unittest.TestCase):
-    ENV = {"VERSION": "1.0.2"}
+    def guard(self, e, gh, **env):
+        return rc.main(["guard"], e.env(**env), gh)
 
-    def guard(self, runner, ref="refs/heads/main"):
-        return rc.main(["guard"], {**self.ENV, "GITHUB_REF": ref}, runner)
+    def assertReadOnly(self, gh):
+        for call in gh.calls:
+            self.assertEqual(call[:3], ("gh", "release", "view"), call)
 
     def test_no_release_passes(self):
-        self.assertEqual(self.guard(fake_gh(stderr="release not found", code=1)), 0)
+        e = Env(self)
+        gh = FakeGh()
+        self.assertEqual(self.guard(e, gh), 0)
+        self.assertReadOnly(gh)
 
     def test_published_release_always_refused(self):
-        for ref in ("refs/heads/main", "refs/tags/v1.0.2"):
-            self.assertEqual(self.guard(fake_gh(stdout="false\n"), ref), 1)
+        e = Env(self)
+        self.assertEqual(self.guard(e, FakeGh({"isDraft": False})), 1)
 
-    def test_draft_refused_for_automatic_runs_adopted_for_tag_pushes(self):
-        self.assertEqual(self.guard(fake_gh(stdout="true\n")), 1)
-        self.assertEqual(self.guard(fake_gh(stdout="true\n"), "refs/tags/v1.0.2"), 0)
+    def test_the_real_stale_draft_is_refused_and_left_alone(self):
+        e = Env(self)
+        gh = FakeGh(REAL_DRAFT)
+        self.assertEqual(self.guard(e, gh), 1)
+        self.assertReadOnly(gh)
+        problems = rc.draft_problems(REAL_DRAFT, "v1.0.1", e.sha, "origin")
+        text = "; ".join(problems)
+        self.assertIn("targets 8915822", text)
+        self.assertIn("4 asset(s)", text)
+
+    def test_empty_draft_on_this_commit_is_reused(self):
+        e = Env(self)
+        gh = FakeGh(draft(targetCommitish=e.sha, body="**Full Changelog**: https://x/compare/a...b"))
+        self.assertEqual(self.guard(e, gh), 0)
+        self.assertReadOnly(gh)
+
+    def test_draft_with_branch_target_must_resolve_to_this_commit(self):
+        e = Env(self)
+        self.assertEqual(self.guard(e, FakeGh(draft(targetCommitish="main"))), 0)
+        (e.work / "f").write_text("2")
+        git(e.work, "commit", "-qam", "two")
+        git(e.work, "push", "-q", "origin", "HEAD:main")  # main moved past e.sha
+        self.assertEqual(self.guard(e, FakeGh(draft(targetCommitish="main"))), 1)
+        self.assertEqual(self.guard(e, FakeGh(draft(targetCommitish="no-such-branch"))), 1)
+
+    def test_draft_with_assets_or_handwritten_notes_is_refused(self):
+        e = Env(self)
+        with_asset = draft(targetCommitish=e.sha, assets=[{"name": "Dlyven-Linux-x64"}])
+        notes = draft(targetCommitish=e.sha, body="## Highlights\nsomething I wrote")
+        for d in (with_asset, notes):
+            gh = FakeGh(d)
+            self.assertEqual(self.guard(e, gh), 1)
+            self.assertReadOnly(gh)
+
+    def test_matching_tag_with_draft_is_fine(self):
+        e = Env(self)
+        git(e.work, "tag", "v1.0.2")
+        git(e.work, "push", "-q", "origin", "v1.0.2")
+        self.assertEqual(self.guard(e, FakeGh(draft(targetCommitish=e.sha))), 0)
+
+    def test_conflicting_tag_is_refused_with_or_without_a_draft(self):
+        e = Env(self)
+        git(e.work, "tag", "v1.0.2")
+        git(e.work, "push", "-q", "origin", "v1.0.2")
+        other = "1" * 40
+        self.assertEqual(self.guard(e, FakeGh(draft(targetCommitish=other)), SHA=other), 1)
+        self.assertEqual(self.guard(e, FakeGh(), SHA=other), 1)
+        self.assertEqual(git(e.remote, "rev-list", "-n1", "v1.0.2"), e.sha)
+
+    def test_missing_tag_with_clean_draft_is_fine(self):
+        e = Env(self)
+        self.assertEqual(e.remote_tags(), "")
+        self.assertEqual(self.guard(e, FakeGh(draft(targetCommitish=e.sha))), 0)
 
     def test_gh_errors_fail_closed(self):
-        self.assertEqual(self.guard(fake_gh(stderr="HTTP 401: Bad credentials", code=1)), 1)
-        self.assertEqual(self.guard(fake_gh(stderr="", code=1)), 1)
+        e = Env(self)
+        self.assertEqual(self.guard(e, FakeGh(stderr="HTTP 401: Bad credentials", code=1)), 1)
+        self.assertEqual(self.guard(e, FakeGh(stderr="", code=1)), 1)
+
+    def test_guard_requires_a_commit(self):
+        e = Env(self)
+        self.assertEqual(self.guard(e, FakeGh(), SHA=""), 1)
 
 
 @unittest.skipUnless(yaml, "PyYAML not installed")
