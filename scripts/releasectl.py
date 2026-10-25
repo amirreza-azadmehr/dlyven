@@ -11,14 +11,17 @@ Env:
   TAG_SOURCE     "app" when RELEASE_TAG_TOKEN pushes the tag, "builtin" for GITHUB_TOKEN
   HAS_TAG_TOKEN  "true" when the RELEASE_TAG_TOKEN secret is non-empty (tag, source=app)
   REMOTE         git remote to push to (default origin)
-  GITHUB_REF     guard only: refs/tags/... runs may adopt a draft, main runs may not
-  GH_TOKEN       guard only: token for `gh release view`
+  GH_TOKEN       guard only: token for `gh release view` (read-only calls; the guard never
+                 creates, edits or deletes anything)
 
-An existing tag is never moved, deleted or overwritten, and neither is an existing
-release or draft: every conflict is a failure with an explanation.
+An existing tag is never moved, deleted or overwritten. An existing published release is
+never touched. An existing draft is reused only when it provably loses nothing: it targets
+the commit being released, holds no assets, has no hand-written notes, and no conflicting tag
+exists. Anything else is a failure that says why and leaves the draft untouched.
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
@@ -120,26 +123,64 @@ def cmd_verify(env) -> int:
     return 0
 
 
-def release_state(tag: str, runner=run) -> str:
-    """'none', 'draft' or 'published'. Anything gh can't answer is an error, not 'none'."""
-    p = runner("gh", "release", "view", tag, "--json", "isDraft", "--jq", ".isDraft")
+AUTO_BODY = re.compile(r"\s*(\*\*Full Changelog\*\*:\s*\S+)?\s*")
+
+
+def release_info(tag: str, runner=run):
+    """The release for tag as a dict (gh JSON), or None. Anything gh can't answer is an error,
+    never "no release": a false 'none' would let a run overwrite something."""
+    p = runner("gh", "release", "view", tag, "--json", "isDraft,targetCommitish,body,assets")
     if p.returncode == 0:
-        return "draft" if p.stdout.strip() == "true" else "published"
+        try:
+            return json.loads(p.stdout)
+        except ValueError:
+            raise Fail(f"cannot parse the release data for {tag}")
     if "release not found" in p.stderr.lower():
-        return "none"
+        return None
     raise Fail(f"cannot tell whether {tag} has a release: {p.stderr.strip() or 'gh failed'}")
 
 
+def draft_problems(info: dict, tag: str, sha: str, remote: str) -> list[str]:
+    """Reasons the existing draft cannot be filled in without losing or mixing information.
+    An empty list means: same commit, nothing in it yet, nothing hand-written to overwrite."""
+    out = []
+    target = (info.get("targetCommitish") or "").strip()
+    if re.fullmatch(r"[0-9a-f]{40}", target):
+        if target != sha:
+            out.append(f"it targets {target[:7]}, but this release is {sha[:7]}")
+    else:
+        p = run("git", "ls-remote", remote, f"refs/heads/{target}") if target else None
+        tip = p.stdout.split("\t")[0] if p is not None and p.returncode == 0 and p.stdout else ""
+        if tip != sha:
+            out.append(f"it targets '{target or '?'}', which is not {sha[:7]}")
+    names = [a.get("name", "?") for a in info.get("assets") or []]
+    if names:
+        out.append(f"it already holds {len(names)} asset(s) ({', '.join(names[:4])}{'…' if len(names) > 4 else ''}) that would be mixed with or replaced by this build")
+    if not AUTO_BODY.fullmatch(info.get("body") or ""):
+        out.append("its notes were written by hand and would be replaced")
+    existing = remote_tag_commit(remote, tag)
+    if existing and existing != sha:
+        out.append(f"the tag {tag} already exists on {existing[:7]}")
+    return out
+
+
 def cmd_guard(env, runner=run) -> int:
-    tag, _, _ = parse({**env, "SHA": env.get("SHA") or "0" * 40})
-    state = release_state(tag, runner)
-    from_tag = (env.get("GITHUB_REF") or "").startswith("refs/tags/")
-    if state == "published":
+    tag, _, sha = parse(env)
+    remote = (env.get("REMOTE") or "origin").strip()
+    existing = remote_tag_commit(remote, tag)
+    if existing and existing != sha:
+        raise Fail(f"tag {tag} already exists on {existing[:7]}, not {sha[:7]}; existing tags are never moved")
+    info = release_info(tag, runner)
+    if info is None:
+        print(f"no release for {tag}")
+        return 0
+    if not info.get("isDraft"):
         raise Fail(f"{tag} is already published; releases are immutable, cut a new version")
-    if state == "draft" and not from_tag:
-        raise Fail(f"a draft release {tag} already exists; an automatic run won't overwrite it. "
-                   f"Publish or delete the draft yourself, or push the tag deliberately")
-    print(f"no conflicting release for {tag}" if state == "none" else f"{tag} draft will be filled by the tag push")
+    problems = draft_problems(info, tag, sha, remote)
+    if problems:
+        raise Fail(f"a draft release {tag} already exists and cannot be reused safely: " + "; ".join(problems) +
+                   f". The draft is untouched. Publish or delete it yourself (or release a different version), then re-run")
+    print(f"draft {tag} is empty, targets {sha[:7]} and has no hand-written notes; it will be filled in")
     return 0
 
 
