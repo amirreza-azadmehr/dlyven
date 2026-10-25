@@ -633,6 +633,9 @@ func (m *Manager) setStatus(j *jobState, st Status) {
 
 func (m *Manager) runYtDlp(ctx context.Context, j *jobState, req Request, input, outDir, tmpDir, base string) error {
 	s := m.settings()
+	if err := m.eng.CheckCookies(s); err != nil {
+		return err
+	}
 	_ = os.Remove(filepath.Join(tmpDir, resultFile))
 	args, _ := buildArgs(req, s, input, outDir, tmpDir, base)
 	args = append(m.eng.BaseArgs(ctx, s), args...)

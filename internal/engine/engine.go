@@ -79,6 +79,7 @@ type cachedVersion struct {
 func New(binDir, cacheDir string, st func() settings.Settings, emit func(string, any), log *slog.Logger) *Manager {
 	_ = os.MkdirAll(binDir, 0o755)
 	clearQuarantine(binDir)
+	pruneNormalized(cacheDir, "") // repaired cookie copies from a previous run
 	return &Manager{
 		binDir: binDir, cacheDir: cacheDir, settings: st, emit: emit, log: log,
 		versions: map[string]cachedVersion{}, latest: map[string]string{},
@@ -486,14 +487,7 @@ func (m *Manager) BaseArgs(ctx context.Context, s settings.Settings) []string {
 	} else {
 		args = append(args, m.impersonateArgs(ctx)...)
 	}
-	switch s.CookiesMode {
-	case "browser":
-		args = append(args, "--cookies-from-browser", s.CookiesBrowser)
-	case "file":
-		if s.CookiesFile != "" {
-			args = append(args, "--cookies", s.CookiesFile)
-		}
-	}
+	args = append(args, m.cookieArgs(s)...)
 	if ff := m.FFmpegPath(); ff != "" {
 		args = append(args, "--ffmpeg-location", ff)
 	}

@@ -121,7 +121,7 @@ var rules = []rule{
 	// yt-dlp can't read Chromium v20 (app-bound) cookies on Windows; see yt-dlp#10927.
 	{ErrCookiesEncrypted, []string{"failed to decrypt with dpapi", "app-bound", "app bound", "v20 cookie", "issues/10927"}},
 	{ErrCookiesLocked, []string{"could not copy chrome cookie database", "could not copy edge cookie database", "could not copy brave cookie database", "could not copy chromium cookie database", "cookie database", "database is locked", "being used by another process"}},
-	{ErrCookies, []string{"could not copy", "failed to decrypt", "cookies database", "could not find firefox cookies", "could not find chrome cookies", "unsupported browser specified for cookies", "failed to load cookies"}},
+	{ErrCookies, []string{"netscape format", "does not look like a netscape", "could not copy", "failed to decrypt", "cookies database", "could not find firefox cookies", "could not find chrome cookies", "unsupported browser specified for cookies", "failed to load cookies"}},
 	{ErrDRM, []string{"drm protected", "this video is drm", " drm", "widevine"}},
 	{ErrAgeRestricted, []string{"sign in to confirm your age", "age-restricted", "age restricted", "inappropriate for some users", "confirm your age"}},
 	{ErrPrivate, []string{"private video", "this video is private", "this account is private", "private account", "is private"}},
