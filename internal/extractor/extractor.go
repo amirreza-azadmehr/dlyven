@@ -41,6 +41,9 @@ func (x *Extractor) Analyze(ctx context.Context, rawURL string) (*MediaInfo, err
 	}
 
 	s := x.settings()
+	if err := x.eng.CheckCookies(s); err != nil {
+		return nil, err
+	}
 	args := append(x.eng.BaseArgs(ctx, s), analyzeFlags(pi)...)
 	args = append(args, "--", pi.URL)
 	cmd, err := x.eng.Command(ctx, args...)

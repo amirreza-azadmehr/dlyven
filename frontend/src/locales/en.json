@@ -375,6 +375,7 @@
     "cookiesBrowser": "Browser",
     "cookiesBrowserHint": "Sign in to the site in that browser first. Chrome and Edge may need to be closed while Dlyven reads cookies.",
     "cookiesChromiumWindows": "On Windows, Chrome, Edge, Brave and other Chromium browsers encrypt cookies so no download tool can read them. Choose Firefox, or switch to a cookies.txt file.",
+    "cookiesUseFirefox": "Use Firefox",
     "cookiesFile": "cookies.txt file",
     "cookiesFileHint": "Export it with a “cookies.txt” browser extension (Netscape format).",
     "chooseCookies": "Choose cookies.txt",

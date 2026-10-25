@@ -375,6 +375,7 @@
     "cookiesBrowser": "وێبگەڕ",
     "cookiesBrowserHint": "سەرەتا لەو وێبگەڕەدا بچۆ ژوورەوەی ماڵپەڕەکە. لەوانەیە پێویست بێت Chrome و Edge داخرابن کاتێک Dlyven کووکییەکان دەخوێنێتەوە.",
     "cookiesChromiumWindows": "لە ویندۆز، Chrome و Edge و Brave و وێبگەڕەکانی تری Chromium کووکییەکان شفرە دەکەن و هیچ ئامرازێکی داگرتن ناتوانێت بیانخوێنێتەوە. Firefox هەڵبژێرە یان بچۆ سەر cookies.txt.",
+    "cookiesUseFirefox": "Firefox بەکاربهێنە",
     "cookiesFile": "فایلی cookies.txt",
     "cookiesFileHint": "بە پێوەکراوێکی وێبگەڕی «cookies.txt» دەری بهێنە (فۆرماتی Netscape).",
     "chooseCookies": "هەڵبژاردنی cookies.txt",

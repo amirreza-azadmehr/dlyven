@@ -375,6 +375,7 @@
     "cookiesBrowser": "Tarayıcı",
     "cookiesBrowserHint": "Önce o tarayıcıda siteye giriş yapın. Dlyven çerezleri okurken Chrome ve Edge'in kapalı olması gerekebilir.",
     "cookiesChromiumWindows": "Windows'ta Chrome, Edge, Brave ve diğer Chromium tarayıcıları çerezleri şifreler; hiçbir indirme aracı okuyamaz. Firefox'u seçin ya da cookies.txt dosyasına geçin.",
+    "cookiesUseFirefox": "Firefox kullan",
     "cookiesFile": "cookies.txt dosyası",
     "cookiesFileHint": "Bir “cookies.txt” tarayıcı eklentisiyle dışa aktarın (Netscape biçimi).",
     "chooseCookies": "cookies.txt seç",

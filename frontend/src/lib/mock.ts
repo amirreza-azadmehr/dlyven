@@ -247,7 +247,8 @@ export function createMockBackend() {
       return { name: 'Dlyven', version: '1.0.0-dev', os: navigator.platform.toLowerCase().includes('mac') ? 'darwin' : 'windows', arch: 'amd64', translucent: false,
         dataDir: '~/.config/Dlyven', logPath: '~/.config/Dlyven/logs/dlyven.log', platforms,
         templateFields: ['title', 'uploader', 'quality', 'resolution', 'fps', 'platform', 'id', 'date', 'playlist', 'index', 'artist', 'album', 'track'],
-        cookieBrowsers: ['chrome', 'edge', 'firefox', 'brave', 'chromium', 'opera', 'vivaldi', 'safari'] }
+        cookieBrowsers: ['chrome', 'edge', 'firefox', 'brave', 'chromium', 'opera', 'vivaldi', 'safari'],
+        installedBrowsers: ['chrome', 'firefox'] }
     },
     async GetSettings() { return { ...settings } },
     async SaveSettings(s) {

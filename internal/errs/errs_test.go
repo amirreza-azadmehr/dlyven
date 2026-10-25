@@ -25,6 +25,7 @@ func TestClassify(t *testing.T) {
 		"ERROR: Failed to decrypt with DPAPI. See  https://github.com/yt-dlp/yt-dlp/issues/10927  for more info":                                    ErrCookiesEncrypted,
 		"ERROR: Could not copy Edge cookie database. See  https://github.com/yt-dlp/yt-dlp/issues/7271  for more info":                              ErrCookiesLocked,
 		"ERROR: could not find firefox cookies database in C:\\Users\\a\\AppData":                                                                   ErrCookies,
+		"ERROR: 'C:\\Users\\a b\\cookies.txt' does not look like a Netscape format cookies file":                                                    ErrCookies,
 		"ERROR: [youtube] abc: This live event will begin in 3 hours.":                                                                              ErrLiveNotStarted,
 		"ERROR: [Spotify] This video is DRM protected":                                                                                              ErrDRM,
 		"ERROR: [Errno 28] No space left on device":                                                                                                 ErrDisk,
