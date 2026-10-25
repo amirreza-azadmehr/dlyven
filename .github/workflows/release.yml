@@ -43,7 +43,8 @@ jobs:
   decide:
     name: Decide
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    # Never for pull requests (forks included): this job sees the RELEASE_TAG_TOKEN secret.
+    if: github.event_name != 'pull_request' && (github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
     permissions:
       contents: read
     outputs:
@@ -66,18 +67,14 @@ jobs:
           FORCE: ${{ github.event.inputs.force }}
           HAS_TAG_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN != '' }}
         run: python3 scripts/auto-release.py
-      # Published releases are immutable: never build over one, whatever triggered this.
-      - name: Refuse to overwrite a published release
+      # Never build over an existing release: published ones are immutable and a draft is
+      # only adopted when the maintainer pushes its tag deliberately.
+      - name: Refuse to overwrite an existing release
         if: steps.d.outputs.should == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.d.outputs.version }}
-        run: |
-          draft="$(gh release view "v${VERSION}" --json isDraft --jq .isDraft 2>/dev/null || echo none)"
-          if [ "$draft" = false ]; then
-            echo "::error::v${VERSION} is already published; cut a new version instead of rebuilding it"
-            exit 1
-          fi
+        run: python3 scripts/releasectl.py guard
 
   build:
     name: Build ${{ matrix.name }}
@@ -449,17 +446,20 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.RELEASE_TAG_TOKEN }}
+      # An automatic run must not adopt (and later overwrite) a pre-existing draft; the release
+      # token can see drafts, the read-only decide token cannot.
+      - name: Refuse to tag over an existing release or draft
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN }}
+          VERSION: ${{ needs.decide.outputs.version }}
+        run: python3 scripts/releasectl.py guard
       - name: Push the tag (the tag run builds and publishes it)
         env:
           VERSION: ${{ needs.decide.outputs.version }}
-        run: |
-          git fetch --tags --force
-          if git rev-parse -q --verify "refs/tags/v${VERSION}" >/dev/null; then
-            echo "::error::tag v${VERSION} already exists; refusing to move or reuse it"
-            exit 1
-          fi
-          git tag "v${VERSION}" "${GITHUB_SHA}"
-          git push origin "refs/tags/v${VERSION}"
+          SHA: ${{ github.sha }}
+          TAG_SOURCE: app
+          HAS_TAG_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN != '' }}
+        run: python3 scripts/releasectl.py tag
 
   publish:
     name: GitHub Release
@@ -486,6 +486,13 @@ jobs:
           # Only the per-OS build artifacts, not the SignPath staging uploads.
           pattern: "{windows,macos,linux}-*"
           merge-multiple: true
+      # Drafts are only visible to a token with write access, so this is the full check
+      # (decide's read-only token can only see published releases).
+      - name: Refuse to overwrite an existing release or draft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ needs.decide.outputs.version }}
+        run: python3 scripts/releasectl.py guard
       - name: Combined checksums
         run: |
           cd dist
@@ -501,24 +508,21 @@ jobs:
             exit 0
           fi
           bash .github/scripts/gpg-sign.sh dist/SHA256SUMS.txt
-      # Only when this run is the one that builds from main (no RELEASE_TAG_TOKEN). A tag that
-      # exists already must point at this commit, otherwise nothing is published.
+      # Only when this run builds from main itself (no RELEASE_TAG_TOKEN). Tag-triggered runs
+      # skip this: their tag already exists. Either way, nothing is published unless the remote
+      # tag exists and points at the commit that was built.
       - name: Tag
         if: startsWith(github.ref, 'refs/heads/') && needs.decide.outputs.tagger != 'app'
         env:
           VERSION: ${{ needs.decide.outputs.version }}
-        run: |
-          git fetch --tags --force
-          if git rev-parse -q --verify "refs/tags/v${VERSION}" >/dev/null; then
-            [ "$(git rev-list -n 1 "v${VERSION}")" = "${GITHUB_SHA}" ] || { echo "::error::tag v${VERSION} exists on another commit"; exit 1; }
-            echo "tag v${VERSION} already exists on this commit"
-          else
-            git tag "v${VERSION}" "${GITHUB_SHA}"
-            git push origin "refs/tags/v${VERSION}" || {
-              echo "::error::could not create tag v${VERSION}. If the repo rules restrict tag creation, add the RELEASE_TAG_TOKEN secret (docs/RELEASING.md) or push the tag yourself."
-              exit 1
-            }
-          fi
+          SHA: ${{ github.sha }}
+          TAG_SOURCE: builtin
+        run: python3 scripts/releasectl.py tag
+      - name: Verify the tag before publishing
+        env:
+          VERSION: ${{ needs.decide.outputs.version }}
+          SHA: ${{ github.sha }}
+        run: python3 scripts/releasectl.py verify
       - name: Download table
         id: notes
         env:
@@ -534,4 +538,6 @@ jobs:
           name: Dlyven ${{ steps.notes.outputs.tag }}
           body_path: release-notes.md
           generate_release_notes: true
+          fail_on_unmatched_files: true
+          draft: false
           files: dist/*
