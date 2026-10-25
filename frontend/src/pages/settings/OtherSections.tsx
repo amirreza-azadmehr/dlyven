@@ -117,6 +117,12 @@ export function CookiesSection() {
           />
         </Row>
       )}
+      {s.cookiesMode === 'browser' && app?.os === 'windows' && s.cookiesBrowser !== 'firefox' && (
+        <div className="mt-3 flex gap-2.5 rounded-xl border border-warning/25 bg-warning/[0.06] p-3 text-xs leading-relaxed text-muted" role="note">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" aria-hidden />
+          {t('settings.cookiesChromiumWindows')}
+        </div>
+      )}
       {s.cookiesMode === 'file' && (
         <Row label={t('settings.cookiesFile')} hint={t('settings.cookiesFileHint')} stack>
           <PathField

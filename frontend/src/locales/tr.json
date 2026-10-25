@@ -374,6 +374,7 @@
     },
     "cookiesBrowser": "Tarayıcı",
     "cookiesBrowserHint": "Önce o tarayıcıda siteye giriş yapın. Dlyven çerezleri okurken Chrome ve Edge'in kapalı olması gerekebilir.",
+    "cookiesChromiumWindows": "Windows'ta Chrome, Edge, Brave ve diğer Chromium tarayıcıları çerezleri şifreler; hiçbir indirme aracı okuyamaz. Firefox'u seçin ya da cookies.txt dosyasına geçin.",
     "cookiesFile": "cookies.txt dosyası",
     "cookiesFileHint": "Bir “cookies.txt” tarayıcı eklentisiyle dışa aktarın (Netscape biçimi).",
     "chooseCookies": "cookies.txt seç",
@@ -539,6 +540,14 @@
     "ERR_COOKIES": {
       "title": "Tarayıcı çerezleri okunamadı",
       "hint": "Tarayıcıyı tamamen kapatıp tekrar deneyin ya da bunun yerine bir cookies.txt dosyası dışa aktarın."
+    },
+    "ERR_COOKIES_ENCRYPTED": {
+      "title": "Chrome ve Edge, Windows'ta çerezlerini kilitli tutar",
+      "hint": "Bu tarayıcılar 2024'ten beri çerezleri yalnızca kendilerinin okuyabileceği şekilde şifreler; hiçbir indirme aracı okuyamaz. Ayarlar → Oturum bölümünde tarayıcıyı Firefox yapın veya bunun yerine bir cookies.txt dosyası dışa aktarın."
+    },
+    "ERR_COOKIES_LOCKED": {
+      "title": "Tarayıcı çerez veritabanını kilitlemiş",
+      "hint": "Tarayıcıyı tamamen kapatın (sistem tepsisinden de çıkın ya da Görev Yöneticisi'nden sonlandırın) ve tekrar deneyin. Sürerse Firefox veya bir cookies.txt dosyası kullanın."
     },
     "ERR_FFMPEG_MISSING": {
       "title": "ffmpeg eksik",
