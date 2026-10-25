@@ -82,6 +82,7 @@ export interface AppInfo {
   platforms: PlatformDef[]
   templateFields: string[]
   cookieBrowsers: string[]
+  installedBrowsers: string[]
 }
 
 export interface Format {

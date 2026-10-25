@@ -114,6 +114,7 @@ func (a *App) startup(ctx context.Context) {
 
 func (a *App) shutdown(context.Context) {
 	a.downloads.Shutdown()
+	a.engine.CleanupCookies()
 	// A downloaded update is installed on any quit, not only through "Restart now".
 	if err := a.updater.ApplyStaged(); err != nil {
 		a.log.Error("applying update failed", "err", err)
@@ -197,6 +198,7 @@ type AppInfo struct {
 	Platforms   []platform.Def `json:"platforms"`
 	Fields      []string       `json:"templateFields"`
 	Browsers    []string       `json:"cookieBrowsers"`
+	Installed   []string       `json:"installedBrowsers"` // browsers with a profile on this machine
 }
 
 func (a *App) GetAppInfo() AppInfo {
@@ -208,6 +210,7 @@ func (a *App) GetAppInfo() AppInfo {
 		Name: appinfo.Name, Version: appinfo.Version, OS: goruntime.GOOS, Arch: goruntime.GOARCH,
 		Translucent: a.translucent, DataDir: a.dataDir, LogPath: lp,
 		Platforms: platform.Registry, Fields: filename.Fields, Browsers: settings.CookieBrowsers,
+		Installed: engine.InstalledBrowsers(settings.CookieBrowsers),
 	}
 }
 

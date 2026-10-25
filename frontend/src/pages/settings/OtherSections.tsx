@@ -91,10 +91,23 @@ export function NetworkSection() {
   )
 }
 
+// Chromium browsers on Windows encrypt cookies with app-bound encryption, which yt-dlp can't read.
+const WINDOWS_UNREADABLE = ['chrome', 'edge', 'brave', 'chromium', 'opera', 'vivaldi']
+
 export function CookiesSection() {
   const { t } = useTranslation()
   const { settings: s, update, app } = useSettings()
   if (!s) return null
+  const windows = app?.os === 'windows'
+  const installed = app?.installedBrowsers ?? []
+  const firefoxInstalled = installed.includes('firefox')
+  // Offer what is actually installed (plus the current choice); fall back to the full list.
+  const browserChoices = (app?.cookieBrowsers ?? []).filter((b) => installed.length === 0 || installed.includes(b) || b === s.cookiesBrowser)
+  // Switching to "my browser": start from one that works here instead of a possibly absent Chrome.
+  const pickBrowser = (): string => {
+    if (windows && firefoxInstalled) return 'firefox'
+    return installed.includes(s.cookiesBrowser) || installed.length === 0 ? s.cookiesBrowser : installed[0]
+  }
   return (
     <Section id="settings-cookies" title={t('settings.sections.cookies')} description={t('settings.cookiesIntro')}>
       <Row label={t('settings.cookiesMode')}>
@@ -102,7 +115,7 @@ export function CookiesSection() {
           className="w-64"
           label={t('settings.cookiesMode')}
           value={s.cookiesMode}
-          onChange={(cookiesMode) => update({ cookiesMode })}
+          onChange={(cookiesMode) => update(cookiesMode === 'browser' ? { cookiesMode, cookiesBrowser: pickBrowser() } : { cookiesMode })}
           options={(['none', 'browser', 'file'] as const).map((m) => ({ value: m, label: t(`settings.cookiesModes.${m}`) }))}
         />
       </Row>
@@ -113,14 +126,19 @@ export function CookiesSection() {
             label={t('settings.cookiesBrowser')}
             value={s.cookiesBrowser}
             onChange={(cookiesBrowser) => update({ cookiesBrowser })}
-            options={(app?.cookieBrowsers ?? []).map((b) => ({ value: b, label: b.charAt(0).toUpperCase() + b.slice(1), dir: 'ltr' as const }))}
+            options={browserChoices.map((b) => ({ value: b, label: b.charAt(0).toUpperCase() + b.slice(1), dir: 'ltr' as const }))}
           />
         </Row>
       )}
-      {s.cookiesMode === 'browser' && app?.os === 'windows' && s.cookiesBrowser !== 'firefox' && (
-        <div className="mt-3 flex gap-2.5 rounded-xl border border-warning/25 bg-warning/[0.06] p-3 text-xs leading-relaxed text-muted" role="note">
+      {s.cookiesMode === 'browser' && windows && WINDOWS_UNREADABLE.includes(s.cookiesBrowser) && (
+        <div className="mt-3 flex items-start gap-2.5 rounded-xl border border-warning/25 bg-warning/[0.06] p-3 text-xs leading-relaxed text-muted" role="note">
           <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning" aria-hidden />
-          {t('settings.cookiesChromiumWindows')}
+          <span className="flex-1">{t('settings.cookiesChromiumWindows')}</span>
+          {firefoxInstalled && (
+            <Button size="sm" onClick={() => update({ cookiesBrowser: 'firefox' })}>
+              {t('settings.cookiesUseFirefox')}
+            </Button>
+          )}
         </div>
       )}
       {s.cookiesMode === 'file' && (

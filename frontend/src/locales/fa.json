@@ -375,6 +375,7 @@
     "cookiesBrowser": "مرورگر",
     "cookiesBrowserHint": "اول در همان مرورگر وارد سایت شوید. ممکن است هنگام خواندن کوکی‌ها لازم باشد کروم و اج بسته باشند.",
     "cookiesChromiumWindows": "در ویندوز، کروم، اج، بریو و دیگر مرورگرهای مبتنی بر Chromium کوکی‌ها را رمزگذاری می‌کنند و هیچ ابزار دانلودی نمی‌تواند آن‌ها را بخواند. Firefox را انتخاب کنید یا به فایل cookies.txt بروید.",
+    "cookiesUseFirefox": "استفاده از Firefox",
     "cookiesFile": "فایل cookies.txt",
     "cookiesFileHint": "آن را با یک افزونهٔ مرورگر «cookies.txt» (قالب Netscape) خروجی بگیرید.",
     "chooseCookies": "انتخاب cookies.txt",
