@@ -1,6 +1,6 @@
 """Tests for scripts/auto-release.py, run against throwaway git repos.
 
-    python3 -m unittest discover -s scripts -p 'test_*.py'
+    python3 -m unittest discover -b -s scripts -p 'test_*.py'
 """
 import importlib.util
 import os

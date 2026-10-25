@@ -59,7 +59,8 @@ jobs:
       - name: Fetch tags
         run: git fetch --tags --force
       - name: Test the release decision
-        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+        # -b: passing tests print workflow commands (::error::) on purpose; keep them out of the log.
+        run: python3 -m unittest discover -b -s scripts -p 'test_*.py'
       - id: d
         env:
           BEFORE: ${{ github.event.before }}
