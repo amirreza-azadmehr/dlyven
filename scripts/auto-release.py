@@ -99,7 +99,13 @@ def consumed_tag_names() -> set[str]:
 
 
 def next_version(tags: list[tuple[int, int, int]]) -> tuple[str, str]:
-    """(last_tag or '', next X.Y.Z), skipping consumed immutable tag names."""
+    """(last_tag or '', next X.Y.Z), skipping consumed immutable tag names.
+
+    If skipping those names would leave a hole in the patch line (v1.0.0 then
+    v1.0.3), jump to the next minor (v1.1.0) so the public history does not
+    look like failed releases. After that, ordinary runs keep patch-bumping
+    (v1.1.0 → v1.1.1).
+    """
     consumed = consumed_tag_names()
     if tags:
         a, b, c = tags[-1]
@@ -110,6 +116,13 @@ def next_version(tags: list[tuple[int, int, int]]) -> tuple[str, str]:
         a, b, c = 1, 0, 0
     while f"v{a}.{b}.{c}" in consumed:
         c += 1
+    if last:
+        la, lb, lc = (int(x) for x in last[1:].split("."))
+        if (a, b) == (la, lb) and c > lc + 1:
+            b += 1
+            c = 0
+            while f"v{a}.{b}.{c}" in consumed:
+                c += 1
     return last, f"{a}.{b}.{c}"
 
 

@@ -57,6 +57,7 @@ what creates `vX.Y.Z`. After that the files and tag are locked.
 
 ## Versions
 
-Published: `v1.0.0`. `v1.0.1` was consumed by a failed immutable publish and cannot
-be reused. The next cut is `v1.0.2`. Do not create the tag by hand, and do not
-publish an empty GitHub Release: once published, binaries cannot be added.
+Published: `v1.0.0`. `v1.0.1` and `v1.0.2` were reserved by failed immutable
+publishes and cannot be reused, so the next public cut is `v1.1.0`. After that,
+app pushes to `main` patch-bump automatically (`v1.1.1`, `v1.1.2`, …). Do not
+create tags by hand, and do not publish an empty GitHub Release.

@@ -25,7 +25,7 @@ const (
 // Version is a var so release builds can stamp it:
 //
 //	wails build -ldflags "-X github.com/amirreza-azadmehr/dlyven/internal/appinfo.Version=1.2.3"
-var Version = "1.0.2"
+var Version = "1.1.0"
 
 // DataDir returns (and creates) the per-user application data directory.
 //

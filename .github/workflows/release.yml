@@ -1,6 +1,6 @@
 name: Release
 
-# App pushes to main cut the next patch (v1.0.2 → v1.0.3), build every OS,
+# App pushes to main cut the next patch (v1.1.0 → v1.1.1), build every OS,
 # and GitHub fills in the changelog from the commits.
 # Docs / site / README / locale-only pushes do nothing here.
 # Add [skip release] to a commit to opt out; Run workflow with force overrides that marker.

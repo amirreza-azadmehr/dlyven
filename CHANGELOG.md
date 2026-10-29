@@ -6,9 +6,9 @@ The real notes are on [GitHub Releases](https://github.com/amirreza-azadmehr/dly
 
 Whatever’s on `main` that isn’t tagged yet.
 
-## [1.0.2] — 2026-10-24
+## [1.1.0] — 2026-10-29
 
-1.0.1 was never published (its release job couldn’t create the tag), so its fixes ship here.
+First feature cut after 1.0.0.
 
 - **Updates itself.** Settings → Updates checks GitHub on launch, then downloads the release for your system, verifies it against `SHA256SUMS.txt` and installs it on restart. Windows Setup installs run the new Setup silently; portable, macOS and Linux copies swap in place. Turn the startup check off in the same place.
 - **Release files say what they’re for:** `Dlyven-Windows-x64-Setup.exe`, `Dlyven-Windows-x64-Portable.exe`, `Dlyven-macOS-Universal.dmg` / `.zip`, `Dlyven-Linux-x64`, `Dlyven-Linux-ARM64`. Names no longer change between releases, so `releases/latest/download/<file>` links keep working. Each release opens with a download table.
@@ -21,6 +21,6 @@ Whatever’s on `main` that isn’t tagged yet.
 
 First public Dlyven. Used to be a private app called GrabIt.
 
-[Unreleased]: https://github.com/amirreza-azadmehr/dlyven/compare/v1.0.2...HEAD
-[1.0.2]: https://github.com/amirreza-azadmehr/dlyven/compare/v1.0.0...v1.0.2
+[Unreleased]: https://github.com/amirreza-azadmehr/dlyven/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/amirreza-azadmehr/dlyven/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/amirreza-azadmehr/dlyven/releases/tag/v1.0.0
