@@ -1,3 +1,4 @@
 # Tag names GitHub reserved after an immutable-release publish attempt.
 # Deleting the release does not free them. Do not retry these; bump instead.
 v1.0.1
+v1.0.2
