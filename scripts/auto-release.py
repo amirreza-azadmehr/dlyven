@@ -22,6 +22,7 @@ Exit status 1 means "refuse loudly": the run must not publish.
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 import subprocess
@@ -134,6 +135,21 @@ def decide_tag(ref: str, sha: str, main: str) -> int:
         raise Refuse(f"tag {name} points at {pointed or 'nothing'}, but this run is for {sha}")
     if not exists(main) or not is_ancestor(sha, main):
         raise Refuse(f"{sha} is not on {main}; refusing to release a commit that never reached main")
+    # Publishing an immutable release creates the git tag and re-fires this workflow.
+    # A published release for this tag is that echo, not a new cut.
+    if os.environ.get("GH_TOKEN"):
+        viewed = subprocess.run(
+            ["gh", "release", "view", name, "--json", "isDraft"],
+            text=True, capture_output=True,
+        )
+        if viewed.returncode == 0:
+            try:
+                info = json.loads(viewed.stdout)
+            except ValueError:
+                info = {}
+            if info.get("isDraft") is False:
+                write_out(False, version, f"{name} is already published; skipping the tag-event echo")
+                return 0
     write_out(True, version, f"tag {name} on {sha[:7]} (on main) → publish v{version}")
     return 0
 

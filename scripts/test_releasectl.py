@@ -283,37 +283,34 @@ class WorkflowShapeTest(unittest.TestCase):
         writers = [n for n, j in self.jobs.items() if "write" in yaml.safe_dump(j.get("permissions", {}))]
         self.assertEqual(writers, ["publish"])
 
-    def test_tag_job_uses_release_token_and_script(self):
-        job = self.jobs["tag"]
-        steps = yaml.safe_dump(job["steps"])
-        self.assertIn("secrets.RELEASE_TAG_TOKEN", steps)
-        self.assertIn("releasectl.py tag", steps)
-        self.assertIn("tagger == 'app'", job["if"])
-        self.assertIn("TAG_SOURCE: app", steps)
-        names = [st["name"] for st in job["steps"] if "name" in st]
-        self.assertLess(names.index("Refuse to tag over an existing release or draft"),
-                        names.index("Push the tag (the tag run builds and publishes it)"))
+    def test_no_git_push_tag_job(self):
+        self.assertNotIn("tag", self.jobs)
+        self.assertNotIn("releasectl.py tag", self.text)
 
-    def test_publish_verifies_tag_before_releasing(self):
+    def test_publish_drafts_then_publishes_then_verifies_tag(self):
         names = [s.get("name", s.get("uses", "")) for s in self.jobs["publish"]["steps"]]
-        verify = names.index("Verify the tag before publishing")
         release = next(i for i, s in enumerate(self.jobs["publish"]["steps"]) if "action-gh-release" in s.get("uses", ""))
-        self.assertLess(verify, release)
+        publish = names.index("Publish the draft (creates the git tag)")
+        verify = names.index("Verify the tag after publishing")
         self.assertLess(names.index("Refuse to overwrite an existing release or draft"), release)
+        self.assertLess(release, publish)
+        self.assertLess(publish, verify)
 
     def test_publish_only_for_decided_releases(self):
         cond = self.jobs["publish"]["if"]
         for part in ("!= 'pull_request'", "needs.decide.outputs.should == 'true'", "needs.build.result != 'skipped'"):
             self.assertIn(part, cond)
 
-    def test_builds_wait_for_tag_job_only_via_tag_run(self):
+    def test_builds_when_decide_says_yes(self):
         cond = self.jobs["build"]["if"]
-        self.assertIn("startsWith(github.ref, 'refs/tags/v') || needs.decide.outputs.tagger != 'app'", cond)
+        self.assertIn("needs.decide.outputs.should == 'true'", cond)
+        self.assertNotIn("tagger != 'app'", cond)
 
     def test_release_action_is_strict(self):
         rel = next(s for s in self.jobs["publish"]["steps"] if "action-gh-release" in s.get("uses", ""))
         self.assertTrue(rel["with"]["fail_on_unmatched_files"])
-        self.assertFalse(rel["with"]["draft"])
+        self.assertTrue(rel["with"]["draft"])
+        self.assertEqual(rel["with"]["target_commitish"], "${{ github.sha }}")
 
 
 if __name__ == "__main__":

@@ -3,15 +3,13 @@ name: Release
 # App pushes to main cut the next patch (v1.0.2 → v1.0.3), build every OS,
 # and GitHub fills in the changelog from the commits.
 # Docs / site / README / locale-only pushes do nothing here.
-# Manual tag v*.*.* still works (the tag must be on main). Add [skip release] to a
-# commit to opt out; Run workflow with force overrides that marker.
+# Add [skip release] to a commit to opt out; Run workflow with force overrides that marker.
 # Decide (scripts/auto-release.py) also refuses reused versions, a commit that isn't
 # main's tip, a tag on another commit, and a version that is already published.
 #
-# Tagging: if the repo rules restrict tag creation, the default GITHUB_TOKEN can't tag.
-# Set the RELEASE_TAG_TOKEN secret (a token whose owner may create tags; see
-# docs/RELEASING.md); main pushes then only push the tag
-# and the tag-triggered run builds and publishes, so nothing is built twice.
+# Immutable releases are on (Settings → General → Releases). Git cannot push tags;
+# GitHub creates the tag only when a release is published. This workflow therefore
+# uploads assets to a draft, then publishes (docs/RELEASING.md). Never git-push a tag.
 # Pull requests build every OS unsigned (fallback mode) and publish nothing.
 #
 # Signing is optional and secret-driven; see SIGNING.md. Missing secrets never
@@ -67,6 +65,7 @@ jobs:
           GITHUB_SHA: ${{ github.sha }}
           FORCE: ${{ github.event.inputs.force }}
           HAS_TAG_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN != '' }}
+          GH_TOKEN: ${{ github.token }}
         run: python3 scripts/auto-release.py
       # Never build over an existing release: published ones are immutable and a draft is
       # only reused when it targets this commit and holds nothing that would be lost.
@@ -81,7 +80,6 @@ jobs:
   build:
     name: Build ${{ matrix.name }}
     needs: decide
-    # With RELEASE_TAG_TOKEN, a main push only tags (job "tag"); the tag run builds.
     if: |
       always() &&
       !cancelled() &&
@@ -89,8 +87,7 @@ jobs:
         (github.event_name == 'pull_request' && needs.decide.result == 'skipped') ||
         (
           needs.decide.result == 'success' &&
-          needs.decide.outputs.should == 'true' &&
-          (startsWith(github.ref, 'refs/tags/v') || needs.decide.outputs.tagger != 'app')
+          needs.decide.outputs.should == 'true'
         )
       )
     runs-on: ${{ matrix.os }}
@@ -431,39 +428,6 @@ jobs:
           name: ${{ matrix.name }}
           path: dist/*
 
-  tag:
-    name: Tag
-    needs: decide
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    if: |
-      github.event_name != 'pull_request' &&
-      !startsWith(github.ref, 'refs/tags/v') &&
-      needs.decide.result == 'success' &&
-      needs.decide.outputs.should == 'true' &&
-      needs.decide.outputs.tagger == 'app'
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.RELEASE_TAG_TOKEN }}
-      # A pre-existing draft is only reused when that loses nothing (see releasectl.py); the
-      # release token can see drafts, the read-only decide token cannot.
-      - name: Refuse to tag over an existing release or draft
-        env:
-          GH_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN }}
-          VERSION: ${{ needs.decide.outputs.version }}
-          SHA: ${{ github.sha }}
-        run: python3 scripts/releasectl.py guard
-      - name: Push the tag (the tag run builds and publishes it)
-        env:
-          VERSION: ${{ needs.decide.outputs.version }}
-          SHA: ${{ github.sha }}
-          TAG_SOURCE: app
-          HAS_TAG_TOKEN: ${{ secrets.RELEASE_TAG_TOKEN != '' }}
-        run: python3 scripts/releasectl.py tag
-
   publish:
     name: GitHub Release
     needs: [decide, build]
@@ -512,21 +476,6 @@ jobs:
             exit 0
           fi
           bash .github/scripts/gpg-sign.sh dist/SHA256SUMS.txt
-      # Only when this run builds from main itself (no RELEASE_TAG_TOKEN). Tag-triggered runs
-      # skip this: their tag already exists. Either way, nothing is published unless the remote
-      # tag exists and points at the commit that was built.
-      - name: Tag
-        if: startsWith(github.ref, 'refs/heads/') && needs.decide.outputs.tagger != 'app'
-        env:
-          VERSION: ${{ needs.decide.outputs.version }}
-          SHA: ${{ github.sha }}
-          TAG_SOURCE: builtin
-        run: python3 scripts/releasectl.py tag
-      - name: Verify the tag before publishing
-        env:
-          VERSION: ${{ needs.decide.outputs.version }}
-          SHA: ${{ github.sha }}
-        run: python3 scripts/releasectl.py verify
       - name: Download table
         id: notes
         env:
@@ -535,6 +484,8 @@ jobs:
           bash .github/scripts/release-notes.sh "$TAG" dist > release-notes.md
           cat release-notes.md
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+      # Draft first so every asset is attached before the release (and its git tag) lock.
+      # Publishing the draft is what creates the tag; git push is forbidden.
       # body_path goes above GitHub's generated changelog.
       - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
@@ -543,5 +494,16 @@ jobs:
           body_path: release-notes.md
           generate_release_notes: true
           fail_on_unmatched_files: true
-          draft: false
+          draft: true
+          target_commitish: ${{ github.sha }}
           files: dist/*
+      - name: Publish the draft (creates the git tag)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.notes.outputs.tag }}
+        run: gh release edit "$TAG" --draft=false
+      - name: Verify the tag after publishing
+        env:
+          VERSION: ${{ needs.decide.outputs.version }}
+          SHA: ${{ github.sha }}
+        run: python3 scripts/releasectl.py verify
