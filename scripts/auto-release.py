@@ -82,6 +82,37 @@ def semver_tags() -> list[tuple[int, int, int]]:
     return found
 
 
+def consumed_tag_names() -> set[str]:
+    """Tag names GitHub has reserved (immutable release attempted). They cannot be reused."""
+    try:
+        with open(".github/consumed-release-tags", encoding="utf-8") as fh:
+            raw = fh.read()
+    except OSError:
+        return set()
+    names: set[str] = set()
+    for line in raw.splitlines():
+        line = line.split("#", 1)[0].strip()
+        if not line:
+            continue
+        names.add(line if line.startswith("v") else f"v{line}")
+    return names
+
+
+def next_version(tags: list[tuple[int, int, int]]) -> tuple[str, str]:
+    """(last_tag or '', next X.Y.Z), skipping consumed immutable tag names."""
+    consumed = consumed_tag_names()
+    if tags:
+        a, b, c = tags[-1]
+        last = f"v{a}.{b}.{c}"
+        c += 1
+    else:
+        last = ""
+        a, b, c = 1, 0, 0
+    while f"v{a}.{b}.{c}" in consumed:
+        c += 1
+    return last, f"{a}.{b}.{c}"
+
+
 def is_app(path: str) -> bool:
     path = path.replace("\\", "/")
     if path.endswith(".md"):
@@ -173,14 +204,11 @@ def main() -> int:
         raise Refuse(f"releases are cut from main, not {ref}")
 
     tags = semver_tags()
+    last, version = next_version(tags)
     if tags:
         a, b, c = tags[-1]
-        last = f"v{a}.{b}.{c}"
-        bumped = f"{a}.{b}.{c + 1}"
     else:
-        last = ""
-        bumped = "1.0.0"
-    version = bumped
+        a, b, c = 1, 0, 0
 
     # Never publish an older run's commit over a newer push; and never a commit that isn't main's.
     if exists(main_ref):

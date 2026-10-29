@@ -53,10 +53,10 @@ what creates `vX.Y.Z`. After that the files and tag are locked.
 | `tag vX.Y.Z already exists on … not …` | an existing tag is never moved; pick a new version |
 | `a draft release vX.Y.Z already exists and cannot be reused safely: …` | the listed reasons (other commit, assets, hand-written notes, conflicting tag) would lose data; publish or delete the draft yourself, then re-run |
 | `vX.Y.Z is already published` | releases are immutable; cut a new version |
+| `tag_name was used by an immutable release` | that tag name is permanently reserved; add it to `.github/consumed-release-tags` and cut the next patch |
 
 ## Versions
 
-Tags: `v1.0.0` is the latest published release. Cut `v1.0.1` with
-Actions → Release → Run workflow after this workflow is on `main`. Do not create
-the tag by hand, and do not publish an empty GitHub Release: once published,
-binaries cannot be added.
+Published: `v1.0.0`. `v1.0.1` was consumed by a failed immutable publish and cannot
+be reused. The next cut is `v1.0.2`. Do not create the tag by hand, and do not
+publish an empty GitHub Release: once published, binaries cannot be added.

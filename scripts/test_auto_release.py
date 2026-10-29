@@ -103,6 +103,15 @@ class DecideTest(unittest.TestCase):
         self.repo.commit("README.md")
         self.assertEqual(self.run_main(FORCE="true"), ("true", "1.0.1"))
 
+    def test_consumed_immutable_tag_is_skipped(self):
+        self.repo.commit("main.go")
+        self.repo.tag("v1.0.0")
+        p = self.repo.path / ".github" / "consumed-release-tags"
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("v1.0.1\n")
+        sha = self.repo.commit("internal/x.go")
+        self.assertEqual(self.run_main(GITHUB_SHA=sha, FORCE="true"), ("true", "1.0.2"))
+
     # --- duplicates / reuse
     def test_already_tagged_commit_is_left_to_tag_run(self):
         self.repo.commit("main.go")
